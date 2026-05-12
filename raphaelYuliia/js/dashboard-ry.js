@@ -48,9 +48,9 @@ $(".navLink").click(function(){
    TOGGLE MENU
 ========================= */
 
-$("").click(function(){
+$("#toggleMenu").click(function(){
 
-    $("").animate({width:""},500);
+    $(".sidebar").animate({width:"toggle"},500);
 
 });
 
