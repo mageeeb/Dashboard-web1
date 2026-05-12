@@ -40,7 +40,7 @@
       $("#toggleMenu").click(function () {
         $(".sidebar").animate(
           {
-            width: "",
+            width: "toggle",
           },
           500,
         );
@@ -126,3 +126,77 @@
             1000,
           );
       }, 2000);
+
+// DARKMODE //
+$(".dark-mode-js").on("click", function () {
+    $("body").toggleClass("bodyDarkMode");
+});
+
+
+$("#btn-disable").click(function () {
+    $("#champ").attr("disabled", "disabled");
+});
+
+$("#btn-enable").click(function () {
+    $("#champ").removeAttr("disabled");
+});
+
+/* DASHBOARD */
+
+$(".carte").click(function () {
+    $(this).animate({ bottom: "10px" }, 750)
+           .animate({ bottom: "0px" }, 750);
+});
+
+
+$("#box1").click(function () {
+    $("#box1").animate({ left: "200px" });
+    $("#box1").animate({ top: "200px" }, function () {
+        $("#box1").css({ background: "red" });
+        $("#box1").animate({ left: "0px" });
+        $("#box1").animate({ top: "0px" });
+    });
+});
+
+
+$("#box2").click(function () {
+    $("#box2").animate({ borderRadius: "50%" });
+});
+
+
+$("#box3").click(function () {
+    $("#box3").animate({ left: "20px" });
+});
+
+
+$("#box4").click(function () {
+    $("#box4").animate({ rotate: "+=360deg" });
+});
+
+
+$("#btn-p").click(function () {
+    $("#paragraphe").slideDown(2000);
+    setTimeout(function () {
+        $("#paragraphe").slideUp(2000);
+    }, 2000);
+});
+
+
+
+// CONTROL // 
+
+$("#btn-lancer").click(function () {
+    $("#box1, #box2, #box3, #box4").trigger("click");
+});
+
+$("#btn-stop").click(function () {
+    $("#box1, #box2, #box3, #box4").stop(true, false);
+});
+
+$("#btn-masquer").click(function () {
+    $("#galerie").slideUp(400);
+});
+
+$("#btn-afficher").click(function () {
+    $("#galerie").slideDown(400);
+});
