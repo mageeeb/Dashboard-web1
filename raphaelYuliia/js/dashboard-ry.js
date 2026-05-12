@@ -4,32 +4,30 @@
    NAVBAR CLIQUABLE
 ========================= */
 
-$(".").click(function(){
+$(".navLink").click(function(){
 
     /*
         Active le lien
     */
 
-    $("")
-    .removeClass("");
+    $(".navLink").removeClass("activeNav");
 
-    $(this)
-    .addClass("");
+    $(this).addClass("activeNav");
 
 
     /*
         Récupère la page
     */
 
-    let page = $(this).data("");
+    let page = $(this).data("page");
 
 
     /*
         Cache toutes les pages
     */
 
-    $("")
-    .removeClass("")
+    $(".page")
+    .removeClass("activePage")
     .hide();
 
 
@@ -41,7 +39,7 @@ $(".").click(function(){
 
     .fadeIn(500)
 
-    .addClass("");
+    .addClass("activePage");
 
 });
 
@@ -52,11 +50,7 @@ $(".").click(function(){
 
 $("").click(function(){
 
-    $("").animate({
-
-        width:""
-
-    },500);
+    $("").animate({width:""},500);
 
 });
 
