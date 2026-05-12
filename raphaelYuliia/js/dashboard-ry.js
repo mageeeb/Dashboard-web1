@@ -67,7 +67,7 @@ $("").click(function(){
 
 $(".counter").each(function(){
 
-    let target = $(this).data("");
+    let target = $(this).data("target");
 
     let counter = $(this);
 
@@ -110,37 +110,37 @@ $(".counter").each(function(){
 
 setInterval(function(){
 
-    $("")
+    $(".c1")
 
     .animate({
-        top:""
-    },1000)
+        top:"100px"
+    },2000)
 
     .animate({
-        top:""
-    },1000);
+        top:"50px"
+    },2000);
 
 
     $(".c2")
 
     .animate({
-        right:""
-    },1000)
+        right:"100px"
+    },2000)
 
     .animate({
-        right:""
-    },1000);
+        right:"200px"
+    },2000);
 
 
     $(".c3")
 
     .animate({
-        left:""
-    },1000)
+        left:"100px"
+    },2000)
 
     .animate({
-        left:""
-    },1000);
+        left:"200px"
+    },2000);
 
 },2000);
 
