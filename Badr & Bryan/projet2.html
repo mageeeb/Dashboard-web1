@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Navbar + Home Dynamique</title>
+
+
+    <style>
+        /* =========================
+   RESET
+========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial;
+            background: #f4f4f4;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+   HEADER
+========================= */
+
+        header {
+            background: #111;
+            color: white;
+            padding: 20px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 28px;
+        }
+
+        /* =========================
+   CONTAINER
+========================= */
+
+        .container {
+            display: flex;
+        }
+
+        /* =========================
+   SIDEBAR
+========================= */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #222;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li {
+            padding: 14px;
+            background: #333;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .sidebar li:hover {
+            background: royalblue;
+            transform: translateX(10px);
+        }
+
+        .activeNav {
+            background: royalblue !important;
+        }
+
+        /* =========================
+   MAIN
+========================= */
+
+        main {
+            flex: 1;
+            padding: 30px;
+        }
+
+        /* =========================
+   PAGE
+========================= */
+
+        .page {
+            display: none;
+        }
+
+        .activePage {
+            display: block;
+        }
+
+        /* =========================
+   HOME PAGE
+========================= */
+
+        .hero {
+            background: linear-gradient(135deg, royalblue, purple);
+            color: white;
+            padding: 60px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h2 {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            width: 70%;
+            line-height: 1.7;
+        }
+
+        /* =========================
+   CIRCLES
+========================= */
+
+        .circle {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.2;
+            position: absolute;
+        }
+
+        .c1 {
+            top: 20px;
+            right: 50px;
+        }
+
+        .c2 {
+            bottom: 30px;
+            right: 180px;
+        }
+
+        .c3 {
+            top: 120px;
+            left: 40px;
+        }
+
+        /* =========================
+   STATS
+========================= */
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .statBox {
+            background: white;
+            flex: 1;
+            min-width: 220px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .statBox h3 {
+            font-size: 40px;
+            color: royalblue;
+            margin-bottom: 10px;
+        }
+
+        /* =========================
+   AUTRES PAGES
+========================= */
+
+        .fakePage {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>Application jQuery</h1>
+
+        <button id="toggleMenu">
+            ☰ Menu
+        </button>
+
+    </header>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <h2>Navigation</h2>
+
+            <ul>
+
+                <li class="navLink activeNav" data-page="homePage">
+
+                    🏠 Home
+
+                </li>
+
+                <li class="navLink" data-page="dashboardPage">
+
+                    📊 Dashboard
+
+                </li>
+
+                <li class="navLink" data-page="profilePage">
+
+                    👤 Profil
+
+                </li>
+
+                <li class="navLink" data-page="settingsPage">
+
+                    ⚙️ Paramètres
+
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+        <!-- MAIN -->
+
+        <main>
+
+            <!-- =========================
+             HOME PAGE
+        ========================= -->
+
+            <section id="homePage" class="page activePage">
+
+                <div class="hero">
+
+                    <div class="circle c1"></div>
+                    <div class="circle c2"></div>
+                    <div class="circle c3"></div>
+
+                    <h2>Bienvenue 🚀</h2>
+
+                    <p>
+
+                        Ceci est une page Home dynamique
+                        créée avec jQuery.
+
+                        Les cercles bougent automatiquement
+                        et les compteurs sont animés.
+
+                    </p>
+
+                </div>
+
+
+                <!-- STATS -->
+
+                <div class="stats">
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="250">
+
+                            0
+
+                        </h3>
+
+                        <p>Utilisateurs</p>
+
+                    </div>
+
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="120">
+
+                            0
+
+                        </h3>
+
+                        <p>Messages</p>
+
+                    </div>
+
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="95">
+
+                            0
+
+                        </h3>
+
+                        <p>Projets</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+             DASHBOARD
+        ========================= -->
+
+            <section id="dashboardPage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>Dashboard</h2>
+
+                    <br>
+
+                    <p>
+                        Contenu du dashboard.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+             PROFILE
+        ========================= -->
+
+            <section id="profilePage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>Profil</h2>
+
+                    <br>
+
+                    <p>
+                        Contenu du profil.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+             SETTINGS
+        ========================= -->
+
+            <section id="settingsPage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>Paramètres</h2>
+
+                    <br>
+
+                    <p>
+                        Contenu des paramètres.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script>
+
+        /* =========================
+           NAVBAR CLIQUABLE
+        ========================= */
+
+        $(".navLink").click(function () {
+
+            /*
+                Active le lien
+            */
+
+            $(".navLink")
+                .removeClass("activeNav");
+
+            $(this)
+                .addClass("ativeNav");
+
+
+            /*
+                Récupère la page
+            */
+
+            let page = $(this).data("page");
+
+
+            /*
+                Cache toutes les pages
+            */
+
+            $("page")
+                .removeClass("activePage")
+                .hide();
+
+
+            /*
+                Affiche la page cliquée
+            */
+
+            $("#" + page)
+
+                .fadeIn(500)
+
+                .addClass("activePage");
+
+        });
+
+
+        /* =========================
+           TOGGLE MENU
+        ========================= */
+
+        $("").click(function () {
+
+            $("").animate({
+
+                width: ""
+
+            }, 500);
+
+        });
+
+
+        /* =========================
+           COUNTERS ANIMÉS
+        ========================= */
+
+        $(".counter").each(function () {
+
+            let target = $(this).data("");
+
+            let counter = $(this);
+
+            $({ countNum: 0 })
+
+                .animate({
+
+                    countNum: target
+
+                },
+
+                    {
+
+                        duration: 2000,
+
+                        easing: "swing",
+
+                        step: function () {
+
+                            counter.text(
+                                Math.floor(this.countNum)
+                            );
+
+                        },
+
+                        complete: function () {
+
+                            counter.text(this.countNum);
+
+                        }
+
+                    });
+
+        });
+
+
+        /* =========================
+           HOME DYNAMIQUE
+        ========================= */
+
+        setInterval(function () {
+
+            $("")
+
+                .animate({
+                    top: ""
+                }, 1000)
+
+                .animate({
+                    top: ""
+                }, 1000);
+
+
+            $(".c2")
+
+                .animate({
+                    right: ""
+                }, 1000)
+
+                .animate({
+                    right: ""
+                }, 1000);
+
+
+            $(".c3")
+
+                .animate({
+                    left: ""
+                }, 1000)
+
+                .animate({
+                    left: ""
+                }, 1000);
+
+        }, 2000);
+
+    </script>
+
+</body>
+
+</html>
