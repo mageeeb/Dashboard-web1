@@ -277,23 +277,38 @@ const REGEX = {
     // Règle : entre 3 et 16 caractères
     //         uniquement lettres (a-z, A-Z), chiffres, underscore _ ou tiret -
     // Indice : ^ = début, $ = fin, [groupe]{min,max}
+<<<<<<< HEAD
     username: /REMPLACE_MOI/,
+=======
+    username: /^[a-zA-Z0-9_-]{3,16}$/,
+>>>>>>> e8ab9d750855223dfff359a517b94d01d5570ad8
 
     // TODO 2 — Regex email
     // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
     // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
+<<<<<<< HEAD
     email: /^[a-zA-Z]+\@[a-zA-Z]+\.[a-zA-Z{2,}]+$/,
+=======
+    email: /REMPLACE_MOI/,
+>>>>>>> e8ab9d750855223dfff359a517b94d01d5570ad8
 
     // TODO 3 — Regex password (la plus complexe !)
     // Règle : 8 caractères minimum
     //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
     // Indice : (?=...) = lookahead positif (vérifie sans consommer)
     //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
+<<<<<<< HEAD
     password: /REMPLACE_MOI/,
 
 };
 
 
+=======
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
+
+};
+
+>>>>>>> e8ab9d750855223dfff359a517b94d01d5570ad8
 /* ============================================================
    TABS — basculer entre Inscription et Connexion
 ============================================================ */
