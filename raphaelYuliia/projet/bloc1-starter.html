@@ -282,7 +282,7 @@ const REGEX = {
     // TODO 2 — Regex email
     // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
     // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
-    email: /REMPLACE_MOI/,
+    email: /^[a-zA-Z]+\@[a-zA-Z]+\.[a-zA-Z{2,}]+$/,
 
     // TODO 3 — Regex password (la plus complexe !)
     // Règle : 8 caractères minimum
