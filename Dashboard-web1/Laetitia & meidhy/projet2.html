@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleHome.css">
     <link rel="stylesheet" href="styleDashboard.css">
+    <link rel="stylesheet" href="styleProfile.css">
     <title>Navbar + Home Dynamique</title>
 </head>
 
@@ -14,7 +16,7 @@
 
     <header>
         <h1>Application jQuery</h1>
-        
+
         <div class="header-btns">
             <button id="toggleMenu">☰ Menu</button>
             <button id="btnDark">🌙 Dark Mode</button>
@@ -65,8 +67,8 @@
         <main>
 
             <!-- =========================
-             HOME PAGE
-        ========================= -->
+                    HOME PAGE
+             ========================= -->
 
             <section id="homePage" class="page activePage">
 
@@ -139,8 +141,8 @@
 
 
             <!-- =========================
-             DASHBOARD
-        ========================= -->
+                    DASHBOARD
+            ========================= -->
 
             <section id="dashboardPage" class="page">
 
@@ -179,313 +181,103 @@
 
 
                 <h2>Manipulation attr()</h2>
-                <form id="formulaire">
-                    <textarea id="message" name="Votre nom" placeholder="Votre nom" disabled></textarea>
+                <form id="formulaireAttr">
+                    <textarea id="messageAttr" placeholder="Votre nom" disabled></textarea>
                 </form>
-
                 <div>
                     <button id="btnD">Disable</button>
                     <button id="btnE">Enable</button>
                 </div>
+
+            </section>
+
+
+            <!-- =========================
+                    PROFILE
+            ========================= -->
+
+            <section id="profilePage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>📝 Inscription</h2>
+
+                    <div id="formulaire">
+                        <div class="form-group">
+                            <label for="inputUsername">Nom d'utilisateur</label>
+                            <input type="text" id="inputUsername" placeholder="ex: jean_dupont" />
+                            <span class="form-error" id="errUsername"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail">Email</label>
+                            <input type="text" id="inputEmail" placeholder="jean@exemple.com" />
+                            <span class="form-error" id="errEmail"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword">Mot de passe</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="inputPassword" placeholder="Votre mot de passe" />
+                                <button type="button" id="togglePassword" title="Afficher/Masquer le mot de passe">
+                                    <!-- Oeil ouvert -->
+                                    <svg id="iconEyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <!-- Oeil fermé -->
+                                    <svg id="iconEyeClosed" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                        <path
+                                            d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                        <line x1="1" y1="1" x2="23" y2="23" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="form-error" id="errPassword"></span>
+                        </div>
+                        <div class="form-actions">
+                            <button id="btnSubmit">✅ S'inscrire</button>
+                            <button id="btnReset">🔄 Réinitialiser</button>
+                        </div>
+                        <div id="formSuccess">✅ Inscription réussie !</div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                    SETTINGS
+            ========================= -->
+
+            <section id="settingsPage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>Paramètres</h2>
+
+                    <br>
+
+                    <p>
+                        Contenu des paramètres.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
     </div>
 
-    </section>
+    <script src="script.js"></script>
 
-
-    <!-- =========================
-             PROFILE
-        ========================= -->
-
-    <section id="profilePage" class="page">
-
-        <div class="fakePage">
-
-            <h2>Profil</h2>
-
-            <br>
-
-            <p>
-                Contenu du profil.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-             SETTINGS
-        ========================= -->
-
-    <section id="settingsPage" class="page">
-
-        <div class="fakePage">
-
-            <h2>Paramètres</h2>
-
-            <br>
-
-            <p>
-                Contenu des paramètres.
-            </p>
-
-        </div>
-
-    </section>
-
-    </main>
-
-    </div>
-    <script>
-
-        /* =========================
-           NAVBAR CLIQUABLE
-        ========================= */
-
-        $(".navLink").click(function () {
-
-            /*
-                Active le lien
-            */
-
-            $(".navLink")
-                .removeClass("activeNav");
-
-            $(this)
-                .addClass("activNav");
-
-
-            /*
-                Récupère la page
-            */
-
-            let page = $(this).data("page");
-
-
-            /*
-                Cache toutes les pages
-            */
-
-            $(".page")
-                .removeClass("activePage")
-                .hide();
-
-
-            /*
-                Affiche la page cliquée
-            */
-
-            $("#" + page)
-
-                .fadeIn(500)
-
-                .addClass("activePage");
-
-        });
-
-
-        /* =========================
-           TOGGLE MENU
-        ========================= */
-
-        $("#toggleMenu").click(function () {
-
-            $(".sidebar").animate({
-
-                width: "toggle"
-
-            }, 500);
-
-        });
-
-
-        /* =========================
-           COUNTERS ANIMÉS
-        ========================= */
-
-        $(".counter").each(function () {
-
-            let target = $(this).data("target");
-
-            let counter = $(this);
-
-            $({ countNum: 0 })
-
-                .animate({
-
-                    countNum: target
-
-                },
-
-                    {
-
-                        duration: 2000,
-
-                        easing: "swing",
-
-                        step: function () {
-
-                            counter.text(
-                                Math.floor(this.countNum)
-                            );
-
-                        },
-
-                        complete: function () {
-
-                            counter.text(this.countNum);
-
-                        }
-
-                    });
-
-        });
-
-
-        /* =========================
-           HOME DYNAMIQUE
-        ========================= */
-
-        setInterval(function () {
-
-            $(".c1")
-
-                .animate({
-                    top: "70px"
-                }, 1000)
-
-                .animate({
-                    top: "30px"
-                }, 1000);
-
-
-            $(".c2")
-
-                .animate({
-                    right: "100px"
-                }, 1000)
-
-                .animate({
-                    right: "260px"
-                }, 1000);
-
-
-            $(".c3")
-
-                .animate({
-                    left: "120px"
-                }, 1000)
-
-                .animate({
-                    left: "40px"
-                }, 1000);
-
-        }, 2000);
-
-
-        /* =========================
-           Dashboard 
-        ========================= */
-        $(document).ready(function () {
-
-            //dark mode 
-            $('#btnDark').click(function () {
-                $('body').toggleClass('dark');
-                if ($('body').hasClass('dark')) {
-                    $(this).text('☀️ Light Mode');
-                } else {
-                    $(this).text('🌙 Dark Mode');
-                }
-            });
-
-            //menu toggle 
-            $('#btnMenu').click(function () {
-                $('#menu').slideToggle(500);
-            });
-
-            // animations carte 
-            $('.carte button').click(function () {
-                $(this).animate({ top: "-20px" }, 300)
-                    .animate({ top: "0px" }, 300);
-            });
-
-            // animation box 1
-
-            $('#btn1').click(function () {
-                $('#box1').animate({ left: "200px" }, 1000)
-                    .animate({ top: "200px" }, 1000, function () {
-                        $(this).css('background-color', 'brown');
-                    })
-                    .animate({ left: "0px" }, 1000)
-                    .animate({ top: "0px" }, 1000);
-            });
-
-            // box 2
-            $('#box2').click(function () {
-                $(this).animate({ borderRadius: "50%" }, 1000);
-            });
-
-            // Box3 
-            $('#box3').click(function () {
-                $(this).animate({ left: "100px" }, 1000);
-            });
-
-            // Box4 
-            let box4Running = false;
-
-            function box4Loop() {
-                if (!box4Running) return;
-                $('#box4').animate({ left: "200px" }, 1500)
-                    .animate({ left: "0px" }, 1500, function () {
-                        box4Loop();
-                    });
-            }
-
-            $('#box4').click(function () {
-                if (!box4Running) {
-                    box4Running = true;
-                    $(this).addClass('spinning');
-                    box4Loop();
-                } else {
-                    box4Running = false;
-                    $(this).stop(true, false);
-                    $(this).removeClass('spinning');
-                }
-            });
-
-            // stop 
-            $('#btn2').click(function () {
-                $('#box1, #box2, #box3, #box4').stop(true, false);
-            });
-
-            // animation galerie 
-            $('#btn3').click(function () {
-                $('#galerie').slideUp(1000);
-            });
-            $('#btn4').click(function () {
-                $('#galerie').slideDown(1000);
-            });
-
-            // animation notif 
-            $('#btnNotif').click(function () {
-                $('#notification').slideDown(500, function () {
-                    setTimeout(function () {
-                        $('#notification').slideUp(500);
-                    }, 2000);
-                });
-            });
-
-            // disabled/enabled 
-
-            $('#btnD').click(function () {
-                $('#message').attr('disabled', 'disabled');
-            });
-            $('#btnE').click(function () {
-                $('#message').removeAttr('disabled');
-            });
-        });
-
-    </script>
 
 </body>
+
 </html>

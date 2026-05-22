@@ -4,9 +4,255 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BLOC 1 — Authentification & Regex</title>
-<link rel="stylesheet" href="stylebloc.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+    /* ============================================================
+   BASE — fourni, ne pas modifier
+============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+body {
+    font-family: Arial, sans-serif;
+    background: #f4efe6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-box {
+    background: white;
+    border: 2px solid #1a1a1a;
+    padding: 40px;
+    width: 460px;
+}
+
+.auth-box h1 {
+    font-size: 28px;
+    margin-bottom: 6px;
+}
+
+.auth-box .sub {
+    color: #7a7268;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #1a1a1a;
+}
+
+.tab {
+    padding: 12px 0;
+    margin-right: 28px;
+    font-family: monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #7a7268;
+    position: relative;
+}
+
+.tab.active {
+    color: #1a1a1a;
+    font-weight: bold;
+}
+
+.tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #ff4d2e;
+}
+
+/* Champs */
+.field {
+    margin-bottom: 20px;
+}
+
+.field label {
+    display: block;
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-bottom: 2px solid #1a1a1a;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.field input:focus {
+    border-bottom-color: #2d5fff;
+}
+
+.field .hint {
+    margin-top: 6px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    min-height: 14px;
+}
+
+/* États de validation */
+.field.error input {
+    border-bottom-color: #ff4d2e;
+}
+
+.field.error .hint {
+    color: #ff4d2e;
+    font-weight: bold;
+}
+
+.field.ok input {
+    border-bottom-color: #1aa179;
+}
+
+.field.ok .hint {
+    color: #1aa179;
+    font-weight: bold;
+}
+
+.field.ok .hint::before {
+    content: "✓ ";
+}
+
+/* Jauge mot de passe */
+.strength {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.strength span {
+    flex: 1;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    transition: background 0.3s;
+}
+
+.strength span.faible {
+    background: #ff4d2e;
+}
+
+.strength span.moyen {
+    background: #ffd23f;
+}
+
+.strength span.fort {
+    background: #1aa179;
+}
+
+/* Bouton */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    font-family: monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.submit-btn:hover {
+    background: #ff4d2e;
+}
+
+.submit-btn.shake {
+    animation: shake 0.4s;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    75% {
+        transform: translateX(8px);
+    }
+}
+
+/* Flash message */
+.flash {
+    margin-top: 16px;
+    padding: 12px 16px;
+    font-family: monospace;
+    font-size: 12px;
+    border-left: 4px solid;
+    display: none;
+}
+
+.flash.ok {
+    background: rgba(26, 161, 121, 0.1);
+    border-color: #1aa179;
+    color: #1aa179;
+}
+
+.flash.err {
+    background: rgba(255, 77, 46, 0.1);
+    border-color: #ff4d2e;
+    color: #ff4d2e;
+}
+
+/* Page de bienvenue (cachée au départ) */
+#welcome {
+    text-align: center;
+    display: none;
+}
+
+#welcome h2 {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+#welcome p {
+    color: #7a7268;
+    margin-bottom: 24px;
+}
+
+#welcome .logout {
+    padding: 10px 24px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    font-family: monospace;
+    cursor: pointer;
+}
+</style>
 
 </head>
 <body>
@@ -119,33 +365,30 @@
 let registeredUser = null; // { username, email, password }
 let isLoggedIn = false;
 
-
 /* ============================================================
    REGEX — à compléter !
    Référence MDN : https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Regular_expressions
 ============================================================ */
 const REGEX = {
+  // TODO 1 — Regex username
+  // Règle : entre 3 et 16 caractères
+  //         uniquement lettres (a-z, A-Z), chiffres, underscore _ ou tiret -
+  // Indice : ^ = début, $ = fin, [groupe]{min,max}
+  username: /^.{3,16}$/,
 
-    // TODO 1 — Regex username
-    // Règle : entre 3 et 16 caractères
-    //         uniquement lettres (a-z, A-Z), chiffres, underscore _ ou tiret -
-    // Indice : ^ = début, $ = fin, [groupe]{min,max}
-    username: /REMPLACE_MOI/,
+  // TODO 2 — Regex email
+  // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
+  // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
+  email: /^[\w.-]+@[\w.-]+\.\w{2,}$/,
 
-    // TODO 2 — Regex email
-    // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
-    // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
-    email: /^[\w.-]+@[\w.-]+\.\w{2,}$/,
-
-    // TODO 3 — Regex password (la plus complexe !)
-    // Règle : 8 caractères minimum
-    //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
-    // Indice : (?=...) = lookahead positif (vérifie sans consommer)
-    //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
-    password: ^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#+=&$^*.()\{\}_?!'"\\-])\S{8,}$, 
-
+  // TODO 3 — Regex password (la plus complexe !)
+  // Règle : 8 caractères minimum
+  //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
+  // Indice : (?=...) = lookahead positif (vérifie sans consommer)
+  //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
+  password:
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>\/?\\|`~]).{8,}$/,
 };
-
 
 /* ============================================================
    TABS — basculer entre Inscription et Connexion
@@ -157,16 +400,14 @@ const REGEX = {
 //   3. Lire l'attribut data-form avec $(this).data("form")
 //   4. Cacher tous les formulaires, afficher le bon avec fadeIn(300)
 
-$(".tab").on("click", function() {
-
-    // Ton code ici ↓
-    $("#tab")
-    .removeClass('active')
-
-    .addClass('active')
-
+$(".tab").on("click", function () {
+  // Ton code ici ↓
+  $(".tab").removeClass("active");
+  $(this).addClass("active");
+  let form = $(this).data("form");
+  $("#signupForm, #loginForm").hide();
+  $("#" + form).fadeIn(300);
 });
-
 
 /* ============================================================
    VALIDATION TEMPS RÉEL — username
@@ -179,12 +420,21 @@ $(".tab").on("click", function() {
 //   - Si invalide → ajouter classe "error", message d'erreur précis dans .hint
 //   - Penser à .removeClass("ok error") au début pour reset l'état précédent
 
-$("#signup-username").on("keyup", function() {
+$("#signup-username").on("keyup", function () {
+  // Ton code ici ↓
+  let valeur = $(this).val();
+  $("#f-username").removeClass("ok error");
 
-    // Ton code ici ↓
-
+  if (REGEX.username.test(valeur)) {
+    $("#f-username").addClass("ok");
+    $("#f-username .message").text("Username valide");
+  } else {
+    $("#f-username").addClass("error");
+    $("#f-username .message").text(
+      "Username invalide (lettres, chiffres, 3-15 caractères)",
+    );
+  }
 });
-
 
 /* ============================================================
    VALIDATION TEMPS RÉEL — email
@@ -193,12 +443,21 @@ $("#signup-username").on("keyup", function() {
 // TODO 6 — Même logique que le username, pour #signup-email
 //           Tester avec REGEX.email.test(valeur)
 
-$("#signup-email").on("keyup", function() {
+$("#signup-email").on("keyup", function () {
+  // Ton code ici ↓
+  let valeur = $(this).val();
+  $("#f-email").removeClass("ok error");
 
-    // Ton code ici ↓
-
+  if (REGEX.email.test(valeur)) {
+    $("#f-email").addClass("ok");
+    $("#f-email .message").text("Email valide");
+  } else {
+    $("#f-email").addClass("error");
+    $("#f-email .message").text(
+      "Email invalide (Format email standard requis)",
+    );
+  }
 });
-
 
 /* ============================================================
    VALIDATION TEMPS RÉEL — password + jauge de force
@@ -218,12 +477,40 @@ $("#signup-email").on("keyup", function() {
 //
 //   c) Valider ou invalider le champ avec REGEX.password.test(valeur)
 
-$("#signup-password").on("keyup", function() {
+$("#signup-password").on("keyup", function () {
+  let valeur = $(this).val();
 
-    // Ton code ici ↓
+  const min = /[a-z]/
+  const maj = /[A-Z]/
+  const numb = /[0-9]/ 
+  const cara = /[^a-zA-Z0-9]/
 
+  // Ton code ici ↓
+  let goal = 0;
+  if (valeur.length >= 8) goal += 1;
+  if (min.test(valeur) && maj.test(valeur)) goal += 1;
+  if (numb.test(valeur)) goal += 1;
+  if (cara.test(valeur)) goal += 1;
+
+
+$(".strength span").each(function (i) {
+  $(this).removeClass("faible moyen fort");
+  if (goal <= 1) {
+    $(this).addClass("faible");
+  } else if (goal > 1 && goal <= 3){
+    $(this).addClass("moyen");
+  } else {$(this).addClass("fort")};
 });
 
+  $("#f-password").removeClass("ok error");
+  if (REGEX.password.test(valeur)) {
+    $("#f-password").addClass("ok");
+    $("#f-password .message").text("Mot de passe valide");
+  } else {
+    $("#f-password").addClass("error");
+    $("#f-password .message").text("Mot de passe invalide");
+  }
+});
 
 /* ============================================================
    BOUTON INSCRIPTION
@@ -238,12 +525,9 @@ $("#signup-password").on("keyup", function() {
 //      Afficher message succès dans #signupFlash (classe "ok")
 //      Après 800ms, appeler doLogin()
 
-$("#signupBtn").on("click", function() {
-
-    // Ton code ici ↓
-
+$("#signupBtn").on("click", function () {
+  // Ton code ici ↓
 });
-
 
 /* ============================================================
    BOUTON CONNEXION
@@ -256,32 +540,33 @@ $("#signupBtn").on("click", function() {
 //   4. Si OK → appeler doLogin()
 //   5. Sinon → shake + flash "err"
 
-$("#loginBtn").on("click", function() {
-
-    // Ton code ici ↓
-
+$("#loginBtn").on("click", function () {
+  // Ton code ici ↓
 });
-
 
 /* ============================================================
    CONNEXION / DÉCONNEXION — logique fournie, ne pas modifier
 ============================================================ */
 function doLogin() {
-    $("#authBox").fadeOut(400, function() {
-        const msg = "Bienvenue <strong>" + registeredUser.username + "</strong> ! Tu es connecté·e.";
-        $("#welcomeMsg").html(msg);
-        $("#welcome").fadeIn(400);
-    });
+  $("#authBox").fadeOut(400, function () {
+    const msg =
+      "Bienvenue <strong>" +
+      registeredUser.username +
+      "</strong> ! Tu es connecté·e.";
+    $("#welcomeMsg").html(msg);
+    $("#welcome").fadeIn(400);
+  });
 }
 
-$("#logoutBtn").on("click", function() {
-    $("#welcome").fadeOut(400, function() {
-        $("#login-email, #login-password").val("");
-        $(".flash").hide();
-        $(".tab").first().trigger("click"); // reset sur l'onglet inscription
-        $("#authBox").fadeIn(400);
-    });
+$("#logoutBtn").on("click", function () {
+  $("#welcome").fadeOut(400, function () {
+    $("#login-email, #login-password").val("");
+    $(".flash").hide();
+    $(".tab").first().trigger("click"); // reset sur l'onglet inscription
+    $("#authBox").fadeIn(400);
+  });
 });
+
 
 </script>
 

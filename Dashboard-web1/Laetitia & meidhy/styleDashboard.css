@@ -1,3 +1,7 @@
+/* =========================
+   HEADER DASHBOARD
+========================= */
+
 .header {
     background-color: black;
     color: white;
@@ -32,36 +36,9 @@
     background: rgba(255, 255, 255, 0.15);
 }
 
-
-body.dark {
-    background-color: #222;
-    color: #eee;
-}
-
-body.dark .header {
-    background-color: #333;
-}
-
-body.dark button {
-    background-color: #444;
-    color: #eee;
-    border-color: #666;
-}
-
-body.dark #message {
-    background-color: #333;
-    color: #eee;
-    border-color: #666;
-}
-
-body.dark #notification {
-    background-color: #444;
-}
-
-body.dark .menu {
-    background-color: #333;
-}
-
+/* =========================
+   MENU
+========================= */
 
 .menu {
     display: none;
@@ -76,12 +53,16 @@ ul li {
     padding: 4px 0;
 }
 
+/* =========================
+   CARTES
+========================= */
+
 .carte {
     margin: 10px 0;
 }
 
 .carte button {
-    position: relative; 
+    position: relative;
     padding: 12px 20px;
     margin-right: 8px;
     border: 1px solid #ccc;
@@ -95,7 +76,14 @@ ul li {
     border: 2px solid blue;
 }
 
-#box1, #box2, #box3, #box4 {
+/* =========================
+   GALERIE / BOXES
+========================= */
+
+#box1,
+#box2,
+#box3,
+#box4 {
     display: inline-block;
     width: 100px;
     height: 100px;
@@ -108,19 +96,56 @@ ul li {
     margin-top: 30px;
 }
 
-#box1 { background-color: red; }
-#box2 { background-color: blue; }
-#box3 { background-color: green; }
-#box4 { background-color: violet; }
+#box1 {
+    background-color: red;
+}
 
-.clear { clear: both; }
+#box2 {
+    background-color: blue;
+}
 
+#box3 {
+    background-color: green;
+}
+
+#box4 {
+    background-color: violet;
+}
+
+.clear {
+    clear: both;
+}
 
 #galerie {
     overflow: visible;
-    min-height: 350px;
+    min-height: 160px;
 }
 
+/* =========================
+   ANIMATION SPIN
+========================= */
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spinning {
+    animation: spin 1s linear infinite;
+}
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+#notif {
+    margin-top: 15px;
+}
 
 #notification {
     display: none;
@@ -129,37 +154,68 @@ ul li {
     padding: 12px 18px;
     border-radius: 5px;
     margin-top: 8px;
+    margin-bottom: 20px;
     font-size: 0.95rem;
 }
 
-#notif {
-    margin-top: 15px;
+/* =========================
+   SECTION ATTR()
+========================= */
+
+#dashboardPage h2 {
+    margin-top: 20px;
+    margin-bottom: 12px;
 }
 
-
-#formulaire {
-    margin-bottom: 10px;
-    margin-top: 5px;
+#formulaireAttr {
+    margin-bottom: 12px;
 }
 
-#message {
+#messageAttr {
+    display: block;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     min-width: 250px;
     min-height: 60px;
+    margin-bottom: 10px;
 }
 
+/* =========================
+   DARK MODE — DASHBOARD
+========================= */
 
-button {
-    cursor: pointer;
+body.dark .header {
+    background-color: #333;
 }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+body.dark #dashboardPage button {
+    background-color: #444;
+    color: #eee;
+    border-color: #666;
 }
 
-.spinning {
-    animation: spin 1s linear infinite;
+body.dark .header-btns button {
+    background-color: transparent;
+    color: white;
+    border-color: white;
+}
+
+body.dark #messageAttr {
+    background-color: #333;
+    color: #eee;
+    border-color: #666;
+}
+
+body.dark #notification {
+    background-color: #444;
+}
+
+body.dark .menu {
+    background-color: #333;
+}
+
+body.dark .carte button {
+    background-color: #444;
+    border-color: #666;
 }
