@@ -291,6 +291,10 @@ const REGEX = {
     //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
 
+    minMaj: /[A-Z]/,
+    chiffre: /[\d]/,
+    symbole: /[!@#$%^&*()_\-+=]/,
+
 };
 
 
@@ -380,34 +384,78 @@ $("#signup-email").on("keyup", function() {
 //
 //   c) Valider ou invalider le champ avec REGEX.password.test(valeur)
 // Regex pour les test de la jauge de force
-const REGEX2 = {
-minMaj: /^(?=.*[a-z])(?=.*[A-Z])$/,
-chiffre: /^(?=.*\d)$/,
-symbole: /^(?=.*[!@#$%^&*()_\-+=])$/,
-}
+
+
+
 $("#signup-password").on("keyup", function() {
     let score = 0
+    let password = $(this);
     // test de la longueur
-    let longueur = len($("f-password"));
+    let passLong = $(this).val();
+    let testLong = passLong.length;
+    console.log(testLong)
     // test de la majuscule
     let passMaj = $(this).val();
-    let testMaj = REGEX2.minMaj.test(passMaj);
+    let testMaj = REGEX.minMaj.test(passMaj);
     // test du chiffre
     let passChif = $(this).val();
-    let testChif = REGEX2.chiffre.test(passChif);
+    let testChif = REGEX.chiffre.test(passChif);
     // test du symbole
     let passSymb = $(this).val();
-    let testSymb = REGEX2.symbole.test(passSymb);
+    let testSymb = REGEX.symbole.test(passSymb);
+
+    let valeur = $(this).val();
+    let result = REGEX.password.test(valeur);
+
     
-    if ( longueur >= 8 ){
-        score += 1;
-    } else if (testMaj === true){
-        score += 1;
-    } else if (testChif === true){
-        score += 1;
-    } else if (testSymb === true){
-        score += 1;
+    if ( testLong >= 8 ){
+        score++;
+        console.log(" longueur ok");
     } 
+    if (testMaj === true){
+        score++;
+        console.log(" majuscule ok");
+    } 
+    if (testChif === true){
+        score++;
+        console.log(" chiffre ok");
+    } 
+    if (testSymb === true){
+        score++;
+        console.log(" symbole ok");
+    } 
+
+    // if (( testLong >= 8 ) || (testMaj === true) || (testChif === true) || (testSymb === true)){ 
+    //     score++;
+    //     console.log("score ++");
+    // }
+
+    // switch (password){
+    //     case (testLong >= 8 ):
+    //     score++;
+    //     console.log(" longueur ok");
+    //     case  (testMaj === true):
+    //     score++;
+    //     console.log(" majuscule ok");
+    //     case  (testChif === true):
+    //     score++;
+    //     console.log(" chiffre ok");
+    //     case  (testSymb === true):
+    //     score++;
+    //     console.log(" symbole ok");
+    // }
+
+    $(".strength span").each(function(i){
+        if (score <= 2){
+            $(this).addClass("faible");
+        } else if (score <= 3){
+            $(this).addClass("moyen");
+        } else if (score <= 4){
+            $(this).addClass("fort");
+        } else {
+            $(this).removeClass("faible moyen fort")
+        }
+    })
 
 });
 
