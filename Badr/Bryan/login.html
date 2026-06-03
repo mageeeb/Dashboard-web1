@@ -4,156 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BLOC 1 — Authentification & Regex</title>
-
+<link rel="stylesheet" href="login.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <style>
-/* ============================================================
-   BASE — fourni, ne pas modifier
-============================================================ */
-* { margin:0; padding:0; box-sizing:border-box; }
 
-body {
-    font-family: Arial, sans-serif;
-    background: #f4efe6;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.auth-box {
-    background: white;
-    border: 2px solid #1a1a1a;
-    padding: 40px;
-    width: 460px;
-}
-
-.auth-box h1 { font-size: 28px; margin-bottom: 6px; }
-.auth-box .sub { color: #7a7268; font-size: 14px; margin-bottom: 30px; }
-
-/* Tabs */
-.tabs { display: flex; gap: 0; margin-bottom: 30px; border-bottom: 2px solid #1a1a1a; }
-.tab {
-    padding: 12px 0;
-    margin-right: 28px;
-    font-family: monospace;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #7a7268;
-    position: relative;
-}
-.tab.active { color: #1a1a1a; font-weight: bold; }
-.tab.active::after {
-    content: "";
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 3px;
-    background: #ff4d2e;
-}
-
-/* Champs */
-.field { margin-bottom: 20px; }
-.field label {
-    display: block;
-    font-family: monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 6px;
-}
-.field input {
-    width: 100%;
-    padding: 12px 0;
-    border: none;
-    border-bottom: 2px solid #1a1a1a;
-    background: transparent;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s;
-}
-.field input:focus { border-bottom-color: #2d5fff; }
-.field .hint {
-    margin-top: 6px;
-    font-family: monospace;
-    font-size: 11px;
-    color: #7a7268;
-    min-height: 14px;
-}
-
-/* États de validation */
-.field.error input  { border-bottom-color: #ff4d2e; }
-.field.error .hint  { color: #ff4d2e; font-weight: bold; }
-.field.ok    input  { border-bottom-color: #1aa179; }
-.field.ok    .hint  { color: #1aa179; font-weight: bold; }
-.field.ok    .hint::before { content: "✓ "; }
-
-/* Jauge mot de passe */
-.strength { display: flex; gap: 4px; margin-top: 8px; }
-.strength span {
-    flex: 1; height: 4px;
-    background: #ddd;
-    border-radius: 2px;
-    transition: background 0.3s;
-}
-.strength span.faible  { background: #ff4d2e; }
-.strength span.moyen   { background: #ffd23f; }
-.strength span.fort    { background: #1aa179; }
-
-/* Bouton */
-.submit-btn {
-    width: 100%;
-    padding: 16px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    font-family: monospace;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background 0.2s, transform 0.15s;
-}
-.submit-btn:hover { background: #ff4d2e; }
-.submit-btn.shake { animation: shake 0.4s; }
-@keyframes shake {
-    0%,100% { transform: translateX(0); }
-    25%      { transform: translateX(-8px); }
-    75%      { transform: translateX(8px); }
-}
-
-/* Flash message */
-.flash {
-    margin-top: 16px;
-    padding: 12px 16px;
-    font-family: monospace;
-    font-size: 12px;
-    border-left: 4px solid;
-    display: none;
-}
-.flash.ok  { background: rgba(26,161,121,0.1); border-color: #1aa179; color: #1aa179; }
-.flash.err { background: rgba(255,77,46,0.1);  border-color: #ff4d2e; color: #ff4d2e; }
-
-/* Page de bienvenue (cachée au départ) */
-#welcome {
-    text-align: center;
-    display: none;
-}
-#welcome h2 { font-size: 36px; margin-bottom: 12px; }
-#welcome p  { color: #7a7268; margin-bottom: 24px; }
-#welcome .logout {
-    padding: 10px 24px;
-    background: #1a1a1a;
-    color: white;
-    border: none;
-    font-family: monospace;
-    cursor: pointer;
-}
 </style>
 </head>
 <body>
@@ -282,7 +137,7 @@ const REGEX = {
     // TODO 2 — Regex email
     // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
     // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
-     email: /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]{2,}]+$/,
+     email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     // TODO 3 — Regex password (la plus complexe !)
     // Règle : 8 caractères minimum
     //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
