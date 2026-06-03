@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleHome.css">
+    <link rel="stylesheet" href="styleDashboard.css">
+    <link rel="stylesheet" href="styleProfile.css">
+    <title>Navbar + Home Dynamique</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>Application jQuery</h1>
+
+        <div class="header-btns">
+            <button id="toggleMenu">☰ Menu</button>
+            <button id="btnDark">🌙 Dark Mode</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <h2>Navigation</h2>
+
+            <ul>
+
+                <li class="navLink activeNav" data-page="homePage">
+
+                    🏠 Home
+
+                </li>
+
+                <li class="navLink" data-page="dashboardPage">
+
+                    📊 Dashboard
+
+                </li>
+
+                <li class="navLink" data-page="profilePage">
+
+                    👤 Profil
+
+                </li>
+
+                <li class="navLink" data-page="settingsPage">
+
+                    ⚙️ Paramètres
+
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+        <!-- MAIN -->
+
+        <main>
+
+            <!-- =========================
+                    HOME PAGE
+             ========================= -->
+
+            <section id="homePage" class="page activePage">
+
+                <div class="hero">
+
+                    <div class="circle c1"></div>
+                    <div class="circle c2"></div>
+                    <div class="circle c3"></div>
+
+                    <h2>Bienvenue 🚀</h2>
+
+                    <p>
+
+                        Ceci est une page Home dynamique
+                        créée avec jQuery.
+
+                        Les cercles bougent automatiquement
+                        et les compteurs sont animés.
+
+                    </p>
+
+                </div>
+
+
+                <!-- STATS -->
+
+                <div class="stats">
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="250">
+
+                            0
+
+                        </h3>
+
+                        <p>Utilisateurs</p>
+
+                    </div>
+
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="120">
+
+                            0
+
+                        </h3>
+
+                        <p>Messages</p>
+
+                    </div>
+
+
+                    <div class="statBox">
+
+                        <h3 class="counter" data-target="95">
+
+                            0
+
+                        </h3>
+
+                        <p>Projets</p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                    DASHBOARD
+            ========================= -->
+
+            <section id="dashboardPage" class="page">
+
+                <div class="header">
+                    <h1>Dashboard Jquery</h1>
+                </div>
+
+
+                <section class="carte" id="card">
+                    <button id="bloc1">Carte 1 <br>Animation jQuery</button>
+                    <button id="bloc2">Carte 2 <br>Manipulation DOM</button>
+                    <button id="bloc3">Carte 3 <br>Effets visuels</button>
+                </section>
+
+                <h2>Contrôles</h2>
+                <div>
+                    <button id="btn1">Lancer animation</button>
+                    <button id="btn2">Stop animation</button>
+                    <button id="btn3">Masquer galerie</button>
+                    <button id="btn4">Afficher galerie</button>
+                </div>
+
+                <div id="galerie">
+                    <div id="box1"></div>
+                    <div id="box2"></div>
+                    <div id="box3"></div>
+                    <div id="box4"></div>
+                    <div class="clear"></div>
+                </div>
+
+
+                <section id="notif">
+                    <button id="btnNotif">Afficher notifications</button>
+                </section>
+                <div id="notification">🔔 Vous avez une nouvelle notification !</div>
+
+
+                <h2>Manipulation attr()</h2>
+                <form id="formulaireAttr">
+                    <textarea id="messageAttr" placeholder="Votre nom" disabled></textarea>
+                </form>
+                <div>
+                    <button id="btnD">Disable</button>
+                    <button id="btnE">Enable</button>
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                    PROFILE
+            ========================= -->
+
+            <section id="profilePage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>📝 Inscription</h2>
+
+                    <div id="formulaire">
+                        <div class="form-group">
+                            <label for="inputUsername">Nom d'utilisateur</label>
+                            <input type="text" id="inputUsername" placeholder="ex: jean_dupont" />
+                            <span class="form-error" id="errUsername"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail">Email</label>
+                            <input type="text" id="inputEmail" placeholder="jean@exemple.com" />
+                            <span class="form-error" id="errEmail"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword">Mot de passe</label>
+                            <div class="password-wrapper">
+                                <input type="password" id="inputPassword" placeholder="Votre mot de passe" />
+                                <button type="button" id="togglePassword" title="Afficher/Masquer le mot de passe">
+                                    <!-- Oeil ouvert -->
+                                    <svg id="iconEyeOpen" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </svg>
+                                    <!-- Oeil fermé -->
+                                    <svg id="iconEyeClosed" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round">
+                                        <path
+                                            d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                                        <path
+                                            d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                                        <line x1="1" y1="1" x2="23" y2="23" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <span class="form-error" id="errPassword"></span>
+                        </div>
+                        <div class="form-actions">
+                            <button id="btnSubmit">✅ S'inscrire</button>
+                            <button id="btnReset">🔄 Réinitialiser</button>
+                        </div>
+                        <div id="formSuccess">✅ Inscription réussie !</div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                    SETTINGS
+            ========================= -->
+
+            <section id="settingsPage" class="page">
+
+                <div class="fakePage">
+
+                    <h2>Paramètres</h2>
+
+                    <br>
+
+                    <p>
+                        Contenu des paramètres.
+                    </p>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+
+
+</body>
+
+</html>

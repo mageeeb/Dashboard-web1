@@ -1,0 +1,93 @@
+/* =========================
+   HERO
+========================= */
+
+.hero {
+    background: linear-gradient(135deg, royalblue, purple);
+    color: white;
+    padding: 60px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h2 {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    width: 70%;
+    line-height: 1.7;
+}
+
+/* =========================
+   CERCLES ANIMÉS
+========================= */
+
+.circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.2;
+    position: absolute;
+}
+
+.c1 {
+    top: 20px;
+    right: 50px;
+}
+
+.c2 {
+    bottom: 30px;
+    right: 180px;
+}
+
+.c3 {
+    top: 120px;
+    left: 40px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.statBox {
+    background: white;
+    flex: 1;
+    min-width: 220px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.statBox h3 {
+    font-size: 40px;
+    color: royalblue;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   DARK MODE — HOME
+========================= */
+
+body.dark .statBox {
+    background: #2a2a2a;
+    color: #eee;
+}
+
+body.dark .statBox p {
+    color: #bbb;
+}
+
+body.dark .statBox h3 {
+    color: #6a9fd8;
+}
