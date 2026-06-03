@@ -277,23 +277,18 @@ const REGEX = {
     // Règle : entre 3 et 16 caractères
     //         uniquement lettres (a-z, A-Z), chiffres, underscore _ ou tiret -
     // Indice : ^ = début, $ = fin, [groupe]{min,max}
-    username: /^[a-zA-Z0-9_-]{3,16}$/,
+    username:  /^[a-zA-Z0-9_-]{3,16}$/,
 
     // TODO 2 — Regex email
     // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
     // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
-    email: /^[a-zA-Z]+\@[a-zA-Z]+\.[a-zA-Z{2,}]+$/,
-
+     email: /^[a-zA-Z]+@[a-zA-Z]+\.[a-zA-Z]{2,}]+$/,
     // TODO 3 — Regex password (la plus complexe !)
     // Règle : 8 caractères minimum
     //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
     // Indice : (?=...) = lookahead positif (vérifie sans consommer)
     //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
-    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
-
-    minMaj: /[A-Z]/,
-    chiffre: /[\d]/,
-    symbole: /[!@#$%^&*()_\-+=]/,
+   password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
 
 };
 
@@ -309,19 +304,17 @@ const REGEX = {
 //   4. Cacher tous les formulaires, afficher le bon avec fadeIn(300)
 
 $(".tab").on("click", function() {
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
 
-    // Ton code ici ↓ a faire
-$(".tab").removeClass("active");
-   $(this)
-    .addClass("active");
+    const form = $(this).data("form");
 
-const form= $(this).data("form");
-     $("#signupForm , #loginForm")
-    .hide();
 
-    $("#" + form)
-    .fadeIn(300);
-});
+     $("#signupForm, #loginForm").hide();
+        $("#" + form).fadeIn(300);
+      });
+   
+
 
 
 /* ============================================================
@@ -336,13 +329,16 @@ const form= $(this).data("form");
 //   - Penser à .removeClass("ok error") au début pour reset l'état précédent
 
 $("#signup-username").on("keyup", function() {
-    $("#f-username").removeClass(" ok error");
-    let valeur = $(this).val();
-    let result = REGEX.username.test(valeur);
-    if (result === true){
+
+    // Ton code ici ↓
+  $("#f-username").removeClass("ok error");
+    const val = $(this).val();
+    if (REGEX.username.test(val)) {
         $("#f-username").addClass("ok");
+        $("#f-username .hint").text("Nom d'utilisateur valide !");
     } else {
         $("#f-username").addClass("error");
+        $("#f-username .hint").text("3-16 carac , ");
     }
 });
 
@@ -355,17 +351,18 @@ $("#signup-username").on("keyup", function() {
 //           Tester avec REGEX.email.test(valeur)
 
 $("#signup-email").on("keyup", function() {
-    $("#f-email").removeClass(" ok error");
-    let valeur = $(this).val();
-    let result = REGEX.email.test(valeur);
-    if (result === true){
+
+    // Ton code ici ↓
+  $("#f-email").removeClass("ok error");
+    const val = $(this).val();
+    if (REGEX.email.test(val)) {
         $("#f-email").addClass("ok");
+        $("#f-email .hint").text("Nom d'utilisateur valide !");
     } else {
         $("#f-email").addClass("error");
+        $("#f-email .hint").text("3-16 carac , ");
     }
 });
-
-console.log('salut');
 
 
 /* ============================================================
@@ -385,81 +382,73 @@ console.log('salut');
 //      Sinon retirer toutes les classes
 //
 //   c) Valider ou invalider le champ avec REGEX.password.test(valeur)
-// Regex pour les test de la jauge de force
 
 
+$("#signup-password").on("keyup", function () {
 
-$("#signup-password").on("keyup", function() {
-    let score = 0
-    let password = $(this);
-    // test de la longueur
-    let passLong = $(this).val();
-    let testLong = passLong.length;
-    console.log(testLong)
-    // test de la majuscule
-    let passMaj = $(this).val();
-    let testMaj = REGEX.minMaj.test(passMaj);
-    // test du chiffre
-    let passChif = $(this).val();
-    let testChif = REGEX.chiffre.test(passChif);
-    // test du symbole
-    let passSymb = $(this).val();
-    let testSymb = REGEX.symbole.test(passSymb);
-
-    let valeur = $(this).val();
-    let result = REGEX.password.test(valeur);
+    const password = $(this).val();
+    let num = 0;
 
     
-    if ( testLong >= 8 ){
-        score++;
-        console.log(" longueur ok");
-    } 
-    if (testMaj === true){
-        score++;
-        console.log(" majuscule ok");
-    } 
-    if (testChif === true){
-        score++;
-        console.log(" chiffre ok");
-    } 
-    if (testSymb === true){
-        score++;
-        console.log(" symbole ok");
-    } 
+    if (password.length >= 8) num++;
+    if (/[!@#$%^&*()_\-+=]/.test(password)) num++;
+    if (/[A-Z]/.test(password)) num++;
+    if (/[0-9]/.test(password)) num++;
 
-    // if (( testLong >= 8 ) || (testMaj === true) || (testChif === true) || (testSymb === true)){ 
-    //     score++;
-    //     console.log("score ++");
-    // }
+   
+    $(".strength span").each(function (i) {
+        $(this).removeClass("faible moyen fort");
 
-    // switch (password){
-    //     case (testLong >= 8 ):
-    //     score++;
-    //     console.log(" longueur ok");
-    //     case  (testMaj === true):
-    //     score++;
-    //     console.log(" majuscule ok");
-    //     case  (testChif === true):
-    //     score++;
-    //     console.log(" chiffre ok");
-    //     case  (testSymb === true):
-    //     score++;
-    //     console.log(" symbole ok");
-    // }
-
-    $(".strength span").each(function(i){
-        if (score <= 2){
-            $(this).addClass("faible");
-        } else if (score <= 3){
-            $(this).addClass("moyen");
-        } else if (score <= 4){
-            $(this).addClass("fort");
-        } else {
-            $(this).removeClass("faible moyen fort")
+        if (i < num) {
+            if (num <= 1) $(this).addClass("faible");
+            else if (num <= 3) $(this).addClass("moyen");
+            else $(this).addClass("fort");
         }
-    })
+    });
+
+    $("#f-password").removeClass("ok error");
+
+    if (REGEX.password.test(password)) {
+        $("#f-password").addClass("ok");
+        $("#f-password .hint").text("Mot de passe valide ");
+    } else {
+        $("#f-password").addClass("error");
+        $("#f-password .hint").text("8+ caractères, maj, min, chiffre, spécial");
+    }
 
 });
+``
+
+/*$("#signup-password").on("keyup", function() {
+
+    // Ton code ici ↓
+const  password= $(this).val();
+let num = 0 ;
+if (password.lenght >= 8)num++;
+if (/[!@#$%^&*()_\-+=]/.test(password)) num++;
+    $(".strenght span").each(function (i) {
+          $("this").removeClass("faible moyen fort");
+          if (i > num) {
+            if (num <= 1) $("this").addClass("faible");
+            else if (num <= 3) $("this").addClass("moyen");
+            else $("this").add("fort");
+          }
+       
+ });
+
+$("#f-password").removeClass("ok error");
+    const val = $(this).val();
+    if (REGEX.password.test(val)) {
+        $("#f-password").addClass("ok");
+        $("#f-password .hint").text("Mot de passe valide !");
+    } else {
+        $("#f-password").addClass("error");
+        $("#f-password .hint").text("3-16 carac");
+    }
+    
+});
+ */
+
 
 
 /* ============================================================
@@ -478,6 +467,10 @@ $("#signup-password").on("keyup", function() {
 $("#signupBtn").on("click", function() {
 
     // Ton code ici ↓
+      
+
+    
+
 
 });
 
