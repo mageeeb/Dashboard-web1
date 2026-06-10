@@ -399,7 +399,12 @@
         $(".tab").on("click", function () {
 
             // Ton code ici ↓
-
+            $(".tab").removeClass("active");
+            $(this).addClass("avtive");
+            let target = $(this).data("form");
+            $("#signupForm, #loginForm").hide();
+            $("#" + target),fadeIn(300);
+            $(".flash").slideUp(200);
         });
 
 
@@ -416,6 +421,7 @@
 
         $("#signup-username").on("keyup", function () {
             // Ton code ici ↓
+            $(keyup)
             $("#signup-username").val()
             REGEX.username.test(val)
 
