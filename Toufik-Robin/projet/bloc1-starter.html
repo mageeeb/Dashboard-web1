@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BLOC 1 — Authentification & Regex</title>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
 
     <style>
       /* ============================================================
@@ -342,15 +342,15 @@
 
     <script>
       /* ============================================================
-   ÉTAT GLOBAL (stocke le compte inscrit en mémoire)
-============================================================ */
+         ÉTAT GLOBAL (stocke le compte inscrit en mémoire)
+      ============================================================ */
       let registeredUser = null; // { username, email, password }
       let isLoggedIn = false;
 
       /* ============================================================
-   REGEX — à compléter !
-   Référence MDN : https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Regular_expressions
-============================================================ */
+         REGEX — à compléter !
+         Référence MDN : https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide/Regular_expressions
+      ============================================================ */
       const REGEX = {
         // TODO 1 — Regex username
         // Règle : entre 3 et 16 caractères
@@ -373,8 +373,8 @@
       };
 
       /* ============================================================
-   TABS — basculer entre Inscription et Connexion
-============================================================ */
+         TABS — basculer entre Inscription et Connexion
+      ============================================================ */
 
       // TODO 4 — Au clic sur un .tab :
       //   1. Retirer la classe "active" de tous les .tab
@@ -386,13 +386,14 @@
         // Ton code ici ↓
         $(".tab").removeClass("active");
         $(this).addClass("active");
+        let form = $(this).data("form");
         $("#signupForm, #loginForm").hide();
         $("#" + form).fadeIn(300);
       });
 
       /* ============================================================
-   VALIDATION TEMPS RÉEL — username
-============================================================ */
+         VALIDATION TEMPS RÉEL — username
+      ============================================================ */
 
       // TODO 5 — Sur l'événement "keyup" de #signup-username :
       //   - Récupérer la valeur avec .val()
@@ -403,22 +404,45 @@
 
       $("#signup-username").on("keyup", function () {
         // Ton code ici ↓
+        let val = $(this).val();
+        $("#f-username").removeClass("ok error");
+        if (REGEX.username.test(val)) {
+          $("#f-username")
+            .addClass("ok")
+            .find(".hint")
+            .text("Nom d'utilisateur valide");
+        } else {
+          $("#f-username")
+            .addClass("error")
+            .find(".hint")
+            .text("3 à 16 caractères : lettres, chiffres, _ ou -");
+        }
       });
 
       /* ============================================================
-   VALIDATION TEMPS RÉEL — email
-============================================================ */
+         VALIDATION TEMPS RÉEL — email
+      ============================================================ */
 
       // TODO 6 — Même logique que le username, pour #signup-email
       //           Tester avec REGEX.email.test(valeur)
 
       $("#signup-email").on("keyup", function () {
         // Ton code ici ↓
+        let val = $(this).val();
+        $("#f-email").removeClass("ok error");
+        if (REGEX.email.test(val)) {
+          $("#f-email").addClass("ok").find(".hint").text("Email valide");
+        } else {
+          $("#f-email")
+            .addClass("error")
+            .find(".hint")
+            .text("Format email standard requis");
+        }
       });
 
       /* ============================================================
-   VALIDATION TEMPS RÉEL — password + jauge de force
-============================================================ */
+         VALIDATION TEMPS RÉEL — password + jauge de force
+      ============================================================ */
 
       // TODO 7 — Sur "keyup" de #signup-password :
       //   a) Calculer un score de 0 à 4 :
@@ -434,13 +458,46 @@
       //
       //   c) Valider ou invalider le champ avec REGEX.password.test(valeur)
 
+      const regexMin = /[a-z]/;
+      const regexMaj = /[A-Z]/;
+      const regexNum = /[0-9]/;
+      const regexSpec = /[^a-zA-Z0-9]/;
+
       $("#signup-password").on("keyup", function () {
-        // Ton code ici ↓
+        const valeur = $(this).val();
+
+        let score = 0;
+        if (valeur.length >= 8) score += 1;
+        if (regexMin.test(valeur) && regexMaj.test(valeur)) score += 1;
+        if (regexNum.test(valeur)) score += 1;
+        if (regexSpec.test(valeur)) score += 1;
+
+        $(".strength span").each(function (i) {
+          $(this).removeClass("faible moyen fort");
+          if (i < score) {
+            if (score <= 1) $(this).addClass("faible");
+            else if (score <= 3) $(this).addClass("moyen");
+            else $(this).addClass("fort");
+          }
+        });
+
+        $("#f-password").removeClass("ok error");
+        if (REGEX.password.test(valeur)) {
+          $("#f-password")
+            .addClass("ok")
+            .find(".hint")
+            .text("Mot de passe valide");
+        } else {
+          $("#f-password")
+            .addClass("error")
+            .find(".hint")
+            .text("8+ caractères, 1 majuscule, 1 chiffre, 1 spécial");
+        }
       });
 
       /* ============================================================
-   BOUTON INSCRIPTION
-============================================================ */
+         BOUTON INSCRIPTION
+      ============================================================ */
 
       // TODO 8 — Au clic sur #signupBtn :
       //   1. Lire les 3 valeurs (username, email, password)
@@ -452,12 +509,54 @@
       //      Après 800ms, appeler doLogin()
 
       $("#signupBtn").on("click", function () {
-        // Ton code ici ↓
+        let errors = [];
+        let isValid = true;
+
+        const usern = $("#signup-username").val().trim();
+        const mail = $("#signup-email").val().trim();
+        const pwd = $("#signup-password").val();
+
+        if (!REGEX.username.test(usern)) {
+          errors.push("Le nom d'utilisateur est invalide (3 à 16 caractères).");
+          isValid = false;
+        }
+
+        if (!REGEX.email.test(mail)) {
+          errors.push("L'adresse e-mail n'est pas valide.");
+          isValid = false;
+        }
+
+        if (!REGEX.password.test(pwd)) {
+          errors.push(
+            "Le mot de passe ne respecte pas les critères de sécurité.",
+          );
+          isValid = false;
+        }
+
+        const popup = $("#signupFlash");
+
+        if (!isValid) {
+          $(this).addClass("shake");
+          setTimeout(() => $(this).removeClass("shake"), 400);
+          popup
+            .removeClass("ok")
+            .addClass("err")
+            .html(errors.join("<br>"))
+            .slideDown(300);
+        } else {
+          registeredUser = { username: usern, email: mail, password: pwd };
+          popup
+            .removeClass("err")
+            .addClass("ok")
+            .text("Compte créé avec succès !")
+            .slideDown(300);
+          setTimeout(doLogin, 800);
+        }
       });
 
       /* ============================================================
-   BOUTON CONNEXION
-============================================================ */
+         BOUTON CONNEXION
+      ============================================================ */
 
       // TODO 9 — Au clic sur #loginBtn :
       //   1. Vérifier que registeredUser existe (sinon → message "inscris-toi d'abord")
@@ -467,12 +566,47 @@
       //   5. Sinon → shake + flash "err"
 
       $("#loginBtn").on("click", function () {
-        // Ton code ici ↓
+        let errors = [];
+        let isValid = true;
+
+        const mail = $("#login-email").val().trim();
+        const pwd = $("#login-password").val();
+
+        if (!registeredUser) {
+          errors.push("Aucun compte trouvé, inscris-toi d'abord.");
+          isValid = false;
+        } else {
+          if (!REGEX.email.test(mail)) {
+            errors.push("L'adresse e-mail n'est pas valide.");
+            isValid = false;
+          }
+          if (
+            mail !== registeredUser.email ||
+            pwd !== registeredUser.password
+          ) {
+            errors.push("E-mail ou mot de passe incorrect.");
+            isValid = false;
+          }
+        }
+
+        const logflash = $("#loginFlash");
+
+        if (!isValid) {
+          $(this).addClass("shake");
+          setTimeout(() => $(this).removeClass("shake"), 400);
+          logflash
+            .removeClass("ok")
+            .addClass("err")
+            .html(errors.join("<br>"))
+            .slideDown(300);
+        } else {
+          doLogin();
+        }
       });
 
       /* ============================================================
-   CONNEXION / DÉCONNEXION — logique fournie, ne pas modifier
-============================================================ */
+         CONNEXION / DÉCONNEXION — logique fournie, ne pas modifier
+      ============================================================ */
       function doLogin() {
         $("#authBox").fadeOut(400, function () {
           const msg =

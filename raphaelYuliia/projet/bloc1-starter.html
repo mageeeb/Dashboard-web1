@@ -263,7 +263,7 @@ body {
 /* ============================================================
    ÉTAT GLOBAL (stocke le compte inscrit en mémoire)
 ============================================================ */
-let registeredUser = null; // { username, email, password }
+let registeredUser = {}; // { username, email, password }
 let isLoggedIn = false;
 
 
@@ -282,14 +282,14 @@ const REGEX = {
     // TODO 2 — Regex email
     // Règle : qqch @ qqch . qqch (au moins 2 lettres pour le domaine)
     // Indice : \. pour un vrai point, + = un ou plusieurs, {2,} = au moins 2
-    email: /^[a-zA-Z]+\@[a-zA-Z]+\.[a-zA-Z{2,}]+$/,
+    email: /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}$/,
 
     // TODO 3 — Regex password (la plus complexe !)
     // Règle : 8 caractères minimum
     //         au moins 1 minuscule, 1 majuscule, 1 chiffre, 1 caractère spécial
     // Indice : (?=...) = lookahead positif (vérifie sans consommer)
     //          (?=.*[A-Z]) = doit contenir au moins une majuscule quelque part
-    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
+     password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_\-+=])(?=.*\d).{8,}$/,
 
     minMaj: /[A-Z]/,
     chiffre: /[\d]/,
@@ -341,8 +341,10 @@ $("#signup-username").on("keyup", function() {
     let result = REGEX.username.test(valeur);
     if (result === true){
         $("#f-username").addClass("ok");
+        $(".hint").eq(0).text("Nom Valide");
     } else {
         $("#f-username").addClass("error");
+        $(".hint").eq(0).text("3 à 16 caractères : lettres, chiffres, _ ou -");
     }
 });
 
@@ -360,8 +362,10 @@ $("#signup-email").on("keyup", function() {
     let result = REGEX.email.test(valeur);
     if (result === true){
         $("#f-email").addClass("ok");
+        $(".hint").eq(1).text("Émail Valide");
     } else {
         $("#f-email").addClass("error");
+        $(".hint").eq(1).text("Format email standard requis");
     }
 });
 
@@ -391,11 +395,17 @@ console.log('salut');
 
 $("#signup-password").on("keyup", function() {
     let score = 0
+    // function test de la longueur du password
+    function passwordLengthValidate($hint){
     let password = $(this);
-    // test de la longueur
     let passLong = $(this).val();
     let testLong = passLong.length;
-    console.log(testLong)
+    if ( testLong <= 7 ){
+        hint.eq(0).text("8+ caractères,")
+    } 
+    }
+
+    passwordLengthValidate($(".hint"));
     // test de la majuscule
     let passMaj = $(this).val();
     let testMaj = REGEX.minMaj.test(passMaj);
@@ -410,10 +420,7 @@ $("#signup-password").on("keyup", function() {
     let result = REGEX.password.test(valeur);
 
     
-    if ( testLong >= 8 ){
-        score++;
-        console.log(" longueur ok");
-    } 
+    
     if (testMaj === true){
         score++;
         console.log(" majuscule ok");
@@ -474,14 +481,55 @@ $("#signup-password").on("keyup", function() {
 //   4. Si tout OK → stocker dans registeredUser = { username, email, password }
 //      Afficher message succès dans #signupFlash (classe "ok")
 //      Après 800ms, appeler doLogin()
+const erreurs=[];
 
 $("#signupBtn").on("click", function() {
 
-    // Ton code ici ↓
+    const username=$("#signup-username")
+    const email=$("#signup-email")
+    const password=$("#signup-password")
+
+    const testUsername=REGEX.username.test(username.val());
+    const testEmail=REGEX.email.test(email.val());
+    const testPassword=REGEX.password.test(password.val());
+if(!testUsername){
+    erreurs.push("Attendre 3 à 16 caractères : lettres, chiffres, _ ou -")
+    $("#signupBtn").addClass("shake")
+    
+}
+
+if(!testEmail){
+    erreurs.push("Attendre format email standard ")
+    $("#signupBtn").addClass("shake")
+    
+}
+
+
+if(!testPassword){
+    erreurs.push("Attendre 8+ caractères, 1 majuscule, 1 chiffre, 1 spécial")
+    $("#signupBtn").addClass("shake")
+   
+
+}
+if(testPassword && testUsername && testEmail  )
+{
+    registeredUser={username:username.val(),email:email.val(),password:password.val()}
+$("#signupFlash").addClass("ok").html()
+setTimeout(()=>{
+ doLogin();
+},800)
+}
+else{
+    $("#signupFlash").addClass("err").html(erreurs).slideDown(300)
+}
 
 });
 
 
+
+
+
+  // $(".submit-btn").addClass("shake")
 /* ============================================================
    BOUTON CONNEXION
 ============================================================ */

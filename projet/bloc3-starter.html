@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 3 — Dashboard Animé jQuery</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+/* ============================================================
+   BASE — fourni, ne pas modifier
+============================================================ */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: #f4efe6; padding: 40px; }
+
+h1 {
+    font-size: 42px;
+    margin-bottom: 6px;
+}
+.sub {
+    font-family: monospace;
+    font-size: 12px;
+    color: #7a7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 40px;
+}
+
+/* Grille de stats */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 2px solid #1a1a1a;
+    margin-bottom: 40px;
+    background: #1a1a1a;
+}
+.statBox {
+    background: white;
+    padding: 28px 24px;
+}
+.statBox .label {
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #7a7268;
+}
+.statBox .num {
+    font-size: 52px;
+    font-weight: 800;
+    font-style: italic;
+    margin: 8px 0 6px;
+    color: #1a1a1a;
+    font-family: Georgia, serif;
+}
+.statBox .delta {
+    font-family: monospace;
+    font-size: 12px;
+}
+.delta.up   { color: #1aa179; }
+.delta.down { color: #ff4d2e; }
+
+/* Section graphique en barres */
+.section-title {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+.section-sub {
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 20px;
+}
+
+.bar-chart-wrap {
+    background: white;
+    border: 2px solid #1a1a1a;
+    padding: 28px;
+    margin-bottom: 40px;
+}
+.bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 200px;
+    border-bottom: 2px solid #1a1a1a;
+    padding-top: 20px;
+}
+.bar {
+    flex: 1;
+    background: #1a1a1a;
+    position: relative;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    /* IMPORTANT : la hauteur sera mise à 0% puis animée par jQuery */
+    height: 0%;
+}
+.bar:nth-child(even)     { background: #ff4d2e; }
+.bar:hover               { opacity: 0.7; }
+.bar .val {
+    position: absolute;
+    top: -22px; left: 50%;
+    transform: translateX(-50%);
+    font-family: monospace;
+    font-size: 11px;
+}
+.bars-labels {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+.bars-labels span {
+    flex: 1;
+    text-align: center;
+    font-family: monospace;
+    font-size: 10px;
+    color: #7a7268;
+}
+
+/* Flux en direct */
+.feed-wrap {
+    background: white;
+    border: 2px solid #1a1a1a;
+    padding: 28px;
+    margin-bottom: 40px;
+}
+.feed-item {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px dashed rgba(26,26,26,0.2);
+    font-size: 14px;
+    /* Sera animé au chargement */
+    opacity: 0;
+}
+.feed-item:last-child { border: none; }
+.feed-item .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #2d5fff;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+.feed-item .when {
+    display: block;
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    margin-top: 2px;
+}
+
+/* Bouton refresh */
+.refresh-btn {
+    padding: 10px 20px;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    font-family: monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    margin-top: 16px;
+    transition: background 0.2s;
+}
+.refresh-btn:hover { background: #ff4d2e; }
+.refresh-btn.spinning { animation: spin 0.6s linear; }
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* Horloge */
+#clock {
+    font-family: monospace;
+    font-size: 13px;
+    color: #7a7268;
+    margin-bottom: 40px;
+}
+</style>
+</head>
+<body>
+
+<div id="clock">⏱ Dernière mise à jour : --:--</div>
+
+<h1>Dashboard</h1>
+<div class="sub">jQuery — Animations & DOM dynamique</div>
+
+
+<!-- ============================================================
+     SECTION 1 : COMPTEURS ANIMÉS
+============================================================ -->
+<div class="stats">
+
+    <div class="statBox">
+        <div class="label">Utilisateurs</div>
+        <!-- data-target = la valeur cible du compteur -->
+        <div class="num counter" data-target="2540">0</div>
+        <div class="delta up">↑ 12.4%</div>
+    </div>
+
+    <div class="statBox">
+        <div class="label">Sessions</div>
+        <div class="num counter" data-target="847">0</div>
+        <div class="delta up">↑ 4.7%</div>
+    </div>
+
+    <div class="statBox">
+        <div class="label">Projets</div>
+        <div class="num counter" data-target="95">0</div>
+        <div class="delta down">↓ 2.1%</div>
+    </div>
+
+    <div class="statBox">
+        <div class="label">Revenus €</div>
+        <div class="num counter" data-target="12780">0</div>
+        <div class="delta up">↑ 18.2%</div>
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     SECTION 2 : GRAPHIQUE EN BARRES
+============================================================ -->
+<div class="bar-chart-wrap">
+
+    <div class="section-title">Activité hebdomadaire</div>
+    <div class="section-sub">Volume de requêtes par jour — barres animées au chargement</div>
+
+    <div class="bars" id="barChart">
+        <!-- data-h = hauteur en % de chaque barre -->
+        <div class="bar" data-h="55"><span class="val">55</span></div>
+        <div class="bar" data-h="72"><span class="val">72</span></div>
+        <div class="bar" data-h="40"><span class="val">40</span></div>
+        <div class="bar" data-h="88"><span class="val">88</span></div>
+        <div class="bar" data-h="65"><span class="val">65</span></div>
+        <div class="bar" data-h="92"><span class="val">92</span></div>
+        <div class="bar" data-h="78"><span class="val">78</span></div>
+    </div>
+
+    <div class="bars-labels">
+        <span>LUN</span><span>MAR</span><span>MER</span>
+        <span>JEU</span><span>VEN</span><span>SAM</span><span>DIM</span>
+    </div>
+
+</div>
+
+
+<!-- ============================================================
+     SECTION 3 : FLUX D'ACTIVITÉ (apparition échelonnée)
+============================================================ -->
+<div class="feed-wrap">
+
+    <div class="section-title">Flux en direct</div>
+    <div class="section-sub">Événements récents — apparaissent progressivement</div>
+
+    <div id="liveFeed">
+
+        <div class="feed-item">
+            <div class="dot"></div>
+            <div>Nouvel utilisateur inscrit <span class="when">il y a 2 min</span></div>
+        </div>
+
+        <div class="feed-item">
+            <div class="dot"></div>
+            <div>Mise à jour du cours jQuery <span class="when">il y a 8 min</span></div>
+        </div>
+
+        <div class="feed-item">
+            <div class="dot"></div>
+            <div>Quiz complété par 5 étudiants <span class="when">il y a 14 min</span></div>
+        </div>
+
+        <div class="feed-item">
+            <div class="dot"></div>
+            <div>Démo "chaining" vue 23 fois <span class="when">il y a 32 min</span></div>
+        </div>
+
+        <div class="feed-item">
+            <div class="dot"></div>
+            <div>Nouveau projet soumis <span class="when">il y a 1h</span></div>
+        </div>
+
+    </div>
+
+    <button class="refresh-btn" id="refreshFeed">↺ Rafraîchir</button>
+
+</div>
+
+
+<script>
+/* ============================================================
+   TODO 1 — Horloge : afficher l'heure actuelle dans #clock
+   ──────────────────────────────────────────────────────────
+   - Créer une fonction updateClock() qui :
+       → Crée un new Date()
+       → Formate l'heure avec .toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" })
+       → Met à jour le texte de #clock avec .text()
+   - Appeler updateClock() une première fois immédiatement
+   - Utiliser setInterval() pour rappeler toutes les 60 000ms
+============================================================ */
+
+// Ton code ici ↓
+
+
+/* ============================================================
+   TODO 2 — Compteurs animés avec $().animate()
+   ─────────────────────────────────────────────
+   - Utiliser .each() pour boucler sur tous les .counter
+   - Pour chaque compteur :
+       → Lire la valeur cible avec $(this).data("target")
+       → Stocker $(this) dans une variable (ex: let $el = $(this))
+       → Utiliser cette technique jQuery :
+           $({ n: 0 }).animate({ n: target }, {
+               duration: 1500,
+               easing: "swing",
+               step: function() {
+                   $el.text( Math.floor(this.n).toLocaleString("fr-FR") );
+               },
+               complete: function() {
+                   $el.text( target.toLocaleString("fr-FR") );
+               }
+           });
+   Pourquoi $({ n: 0 }) ? jQuery ne peut animer que des propriétés CSS.
+   En encapsulant dans un objet, on anime une propriété numérique custom !
+============================================================ */
+
+$(".counter").each(function() {
+
+    // Ton code ici ↓
+
+});
+
+
+/* ============================================================
+   TODO 3 — Graphique en barres animé au chargement
+   ─────────────────────────────────────────────────
+   - Utiliser .each() sur #barChart .bar
+   - Pour chaque barre :
+       → Lire la hauteur cible avec $(this).data("h")
+       → Utiliser .delay(i * 100) pour échelonner l'apparition
+       → Puis .animate({ height: h + "%" }, 700)
+   Note : i est le 2e paramètre de la fonction .each()
+   ex: $(".bar").each(function(i) { ... })
+============================================================ */
+
+$("#barChart .bar").each(function(i) {
+
+    // Ton code ici ↓
+
+});
+
+
+/* ============================================================
+   TODO 4 — Flux d'activité : apparition progressive
+   ──────────────────────────────────────────────────
+   - Utiliser .each() sur les .feed-item
+   - Pour chaque item (index i) :
+       → Utiliser .delay(i * 200) pour décaler l'animation
+       → Puis .animate({ opacity: 1 }, 400)
+       → BONUS : animer aussi un léger translateX avec le paramètre "step"
+           step: function(now) {
+               $(this).css("transform", "translateX(" + ((1-now)*-12) + "px)");
+           }
+============================================================ */
+
+function animateFeed() {
+    $(".feed-item").css({ opacity: 0 }); // reset
+
+    $(".feed-item").each(function(i) {
+
+        // Ton code ici ↓
+
+    });
+}
+
+animateFeed(); // appel initial
+
+
+/* ============================================================
+   TODO 5 — Bouton "Rafraîchir" le flux
+   ─────────────────────────────────────
+   Au clic sur #refreshFeed :
+     → Ajouter la classe "spinning" sur $(this) pour l'animation
+     → Retirer la classe après 600ms avec setTimeout
+     → Rappeler animateFeed() après 300ms
+============================================================ */
+
+$("#refreshFeed").on("click", function() {
+
+    // Ton code ici ↓
+
+});
+
+</script>
+
+<!-- ============================================================
+     FOOTER PIXELBAOBAB
+============================================================ -->
+<footer style="
+    margin-top: 40px;
+    padding: 18px 30px;
+    background: #1a1a1a;
+    color: rgba(255,250,240,0.5);
+    text-align: center;
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-top: 3px solid #ff4d2e;
+">
+    D&#233;velopp&#233; par&nbsp;
+    <a href="https://www.pixelbaobab.com"
+       target="_blank"
+       rel="noopener"
+       style="
+           color: #ff4d2e;
+           text-decoration: none;
+           font-weight: bold;
+           letter-spacing: 0.15em;
+           transition: opacity 0.2s;
+       "
+       onmouseover="this.style.opacity='0.7'"
+       onmouseout="this.style.opacity='1'"
+    >PixelBaobab</a>
+    &nbsp;&middot;&nbsp; jQuery Academy &nbsp;&middot;&nbsp; 2026
+</footer>
+
+</body>
+</html>
