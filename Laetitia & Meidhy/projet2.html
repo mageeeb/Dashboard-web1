@@ -7,7 +7,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Navbar + Home Dynamique</title>
-
 </head>
 
 <body>
@@ -194,96 +193,92 @@
                     PROFILE
             ========================= -->
 
-            <section id="profilePage" class="page">
+            <div id="authBox" class="auth-box">
 
-                <div class="fakePage">
+                <h1>jQuery Academy</h1>
+                <p class="sub">Crée ton compte pour accéder au dashboard.</p>
 
-                    <!-- Onglets -->
-                    <div class="form-tabs">
-                        <h2 class="tab-title activeTab" id="tabInscription">📝 Inscription</h2>
-                        <h2 class="tab-title" id="tabConnexion">🔑 Connexion</h2>
+                <!-- TABS -->
+                <div class="tabs">
+                    <button class="tab active" data-form="signupForm">Inscription</button>
+                    <button class="tab" data-form="loginForm">Connexion</button>
+                </div>
+
+
+                <!-- ==============================
+                    FORMULAIRE INSCRIPTION
+                ============================== -->
+                <div id="signupForm">
+
+                    <!-- Champ username -->
+                    <div class="field" id="f-username">
+                        <label for="signup-username">Nom d'utilisateur</label>
+                        <input type="text" id="signup-username" placeholder="ex: jean_dev" autocomplete="off">
+                        <div class="hint">3 à 16 caractères : lettres, chiffres, _ ou -</div>
                     </div>
 
-                    <!-- FORMULAIRE INSCRIPTION -->
-                    <div id="formulaire-inscription">
-                        <div class="form-group">
-                            <label for="inputUsername">Nom d'utilisateur</label>
-                            <input type="text" id="inputUsername" placeholder="ex: jean_dupont" />
-                            <span class="form-error" id="errUsername"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputEmail">Email</label>
-                            <input type="text" id="inputEmail" placeholder="jean@exemple.com" />
-                            <span class="form-error" id="errEmail"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPassword">Mot de passe</label>
-                            <div class="password-wrapper">
-                                <input type="password" id="inputPassword" placeholder="Votre mot de passe" />
-                                <button type="button" id="togglePassword" title="Afficher/Masquer le mot de passe">
-                                    <svg id="iconEyeOpen" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                    <svg id="iconEyeClosed" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                                        <line x1="1" y1="1" x2="23" y2="23" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <span class="form-error" id="errPassword"></span>
-                        </div>
-                        <div class="form-actions">
-                            <button id="btnSubmit">✅ S'inscrire</button>
-                            <button id="btnReset">🔄 Réinitialiser</button>
-                        </div>
-                        <div id="formSuccess">✅ Inscription réussie !</div>
+                    <!-- Champ email -->
+                    <div class="field" id="f-email">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" placeholder="prenom@domaine.com" autocomplete="off">
+                        <div class="hint">Format email standard requis</div>
                     </div>
 
-                    <!-- FORMULAIRE CONNEXION (IDs suffixés -cx pour éviter les doublons) -->
-                    <div id="formulaire-connexion">
-                        <div class="form-group">
-                            <label for="inputEmailCx">Email</label>
-                            <input type="text" id="inputEmailCx" placeholder="jean@exemple.com" />
-                            <span class="form-error" id="errEmailCx"></span>
+                    <!-- Champ password -->
+                    <div class="field" id="f-password">
+                        <label for="signup-password">Mot de passe</label>
+                        <input type="password" id="signup-password" placeholder="••••••••" autocomplete="off">
+                        <div class="hint">8+ caractères, 1 majuscule, 1 chiffre, 1 spécial</div>
+                        <!-- Jauge de force -->
+                        <div class="strength">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
                         </div>
-                        <div class="form-group">
-                            <label for="inputPasswordCx">Mot de passe</label>
-                            <div class="password-wrapper">
-                                <input type="password" id="inputPasswordCx" placeholder="Votre mot de passe" />
-                                <button type="button" id="togglePasswordCx" title="Afficher/Masquer le mot de passe">
-                                    <svg id="iconEyeOpenCx" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                                        <circle cx="12" cy="12" r="3" />
-                                    </svg>
-                                    <svg id="iconEyeClosedCx" xmlns="http://www.w3.org/2000/svg" width="15" height="15"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                                        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                                        <line x1="1" y1="1" x2="23" y2="23" />
-                                    </svg>
-                                </button>
-                            </div>
-                            <span class="form-error" id="errPasswordCx"></span>
-                        </div>
-                        <div class="form-actions">
-                            <button id="btnSubmitCx">✅ Se connecter</button>
-                            <button id="btnResetCx">🔄 Réinitialiser</button>
-                        </div>
-                        <div id="formSuccessCx">✅ Connexion réussie !</div>
                     </div>
+
+                    <button class="submit-btn" id="signupBtn">Créer le compte →</button>
+
+                    <div class="flash" id="signupFlash"></div>
 
                 </div>
 
-            </section>
+
+                <!-- ==============================
+                    FORMULAIRE CONNEXION
+                ============================== -->
+                <div id="loginForm" style="display:none">
+
+                    <div class="field" id="f-login-email">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="prenom@domaine.com" autocomplete="off">
+                        <div class="hint">&nbsp;</div>
+                    </div>
+
+                    <div class="field" id="f-login-password">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" placeholder="••••••••" autocomplete="off">
+                        <div class="hint">&nbsp;</div>
+                    </div>
+
+                    <button class="submit-btn" id="loginBtn">Se connecter →</button>
+
+                    <div class="flash" id="loginFlash"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ============================================================
+                        PAGE D'ACCUEIL (après connexion)
+            ============================================================ -->
+            <div id="welcome" class="auth-box">
+                <h2>Bienvenue 🎉</h2>
+                <p id="welcomeMsg">Connexion réussie !</p>
+                <button class="logout" id="logoutBtn">Se déconnecter</button>
+            </div>
 
 
             <!-- =========================
@@ -310,365 +305,8 @@
 
     </div>
 
+    <script src="script.js"></script>
 
-    <script>
-
-        /* =========================
-            NAVBAR CLIQUABLE
-        ========================= */
-
-        $(".navLink").click(function () {
-
-            /*
-                Active le lien
-            */
-
-            $(".navLink")
-                .removeClass("activeNav");
-
-            $(this)
-                .addClass("activeNav");
-
-
-            /*
-                Récupère la page
-            */
-
-            let page = $(this).data("page");
-
-
-            /*
-                Cache toutes les pages
-            */
-
-            $(".page")
-                .removeClass("activePage")
-                .hide();
-
-
-            /*
-                Affiche la page cliquée
-            */
-
-            $("#" + page)
-
-                .fadeIn(500)
-
-                .addClass("activePage");
-
-        });
-
-
-        /* =========================
-                TOGGLE MENU
-        ========================= */
-
-        $("#toggleMenu").click(function () {
-            $(".sidebar").slideToggle(300);
-        });
-
-
-        /* =========================
-                COUNTERS ANIMÉS
-        ========================= */
-
-        $(".counter").each(function () {
-
-            let target = $(this).data("target");
-
-            let counter = $(this);
-
-            $({ countNum: 0 })
-
-                .animate({
-
-                    countNum: target
-
-                },
-
-                    {
-
-                        duration: 2000,
-
-                        easing: "swing",
-
-                        step: function () {
-
-                            counter.text(
-                                Math.floor(this.countNum)
-                            );
-
-                        },
-
-                        complete: function () {
-
-                            counter.text(this.countNum);
-
-                        }
-
-                    });
-
-        });
-
-
-        /* =========================
-            HOME DYNAMIQUE
-        ========================= */
-
-        setInterval(function () {
-
-            $(".c1")
-
-                .animate({
-                    top: "70px"
-                }, 1000)
-
-                .animate({
-                    top: "30px"
-                }, 1000);
-
-
-            $(".c2")
-
-                .animate({
-                    right: "100px"
-                }, 1000)
-
-                .animate({
-                    right: "260px"
-                }, 1000);
-
-
-            $(".c3")
-
-                .animate({
-                    left: "120px"
-                }, 1000)
-
-                .animate({
-                    left: "40px"
-                }, 1000);
-
-        }, 2000);
-
-
-        /* =========================
-                Dashboard 
-        ========================= */
-        $(document).ready(function () {
-
-            //dark mode 
-            $('#btnDark').click(function () {
-                $('body').toggleClass('dark');
-                if ($('body').hasClass('dark')) {
-                    $(this).text('☀️ Light Mode');
-                } else {
-                    $(this).text('🌙 Dark Mode');
-                }
-            });
-
-            //menu toggle 
-            $('#btnMenu').click(function () {
-                $('#menu').slideToggle(500);
-            });
-
-            // animations carte 
-            $('.carte button').click(function () {
-                $(this).animate({ top: "-20px" }, 300)
-                    .animate({ top: "0px" }, 300);
-            });
-
-            // animation box 1
-
-            $('#btn1').click(function () {
-                $('#box1').animate({ left: "200px" }, 1000)
-                    .animate({ top: "200px" }, 1000, function () {
-                        $(this).css('background-color', 'brown');
-                    })
-                    .animate({ left: "0px" }, 1000)
-                    .animate({ top: "0px" }, 1000);
-            });
-
-            // box 2
-            $('#box2').click(function () {
-                $(this).animate({ borderRadius: "50%" }, 1000);
-            });
-
-            // Box3 
-            $('#box3').click(function () {
-                $(this).animate({ left: "100px" }, 1000);
-            });
-
-            // Box4 
-            let box4Running = false;
-
-            function box4Loop() {
-                if (!box4Running) return;
-                $('#box4').animate({ left: "200px" }, 1500)
-                    .animate({ left: "0px" }, 1500, function () {
-                        box4Loop();
-                    });
-            }
-
-            $('#box4').click(function () {
-                if (!box4Running) {
-                    box4Running = true;
-                    $(this).addClass('spinning');
-                    box4Loop();
-                } else {
-                    box4Running = false;
-                    $(this).stop(true, false);
-                    $(this).removeClass('spinning');
-                }
-            });
-
-            // stop 
-            $('#btn2').click(function () {
-                $('#box1, #box2, #box3, #box4').stop(true, false);
-            });
-
-            // animation galerie 
-            $('#btn3').click(function () {
-                $('#galerie').slideUp(1000);
-            });
-            $('#btn4').click(function () {
-                $('#galerie').slideDown(1000);
-            });
-
-            // animation notif 
-            $('#btnNotif').click(function () {
-                $('#notification').slideDown(500, function () {
-                    setTimeout(function () {
-                        $('#notification').slideUp(500);
-                    }, 2000);
-                });
-            });
-
-            // disabled/enabled
-            $('#btnD').click(function () {
-                $('#messageAttr').attr('disabled', 'disabled');
-            });
-            $('#btnE').click(function () {
-                $('#messageAttr').removeAttr('disabled');
-            });
-
-            /* =========================
-            ONGLETS INSCRIPTION / CONNEXION
-            ========================= */
-
-            $('#tabInscription').click(function () {
-                $('#tabInscription').addClass('activeTab');
-                $('#tabConnexion').removeClass('activeTab');
-                $('#formulaire-inscription').show();
-                $('#formulaire-connexion').hide();
-            });
-
-            $('#tabConnexion').click(function () {
-                $('#tabConnexion').addClass('activeTab');
-                $('#tabInscription').removeClass('activeTab');
-                $('#formulaire-connexion').show();
-                $('#formulaire-inscription').hide();
-            });
-
-            /* =========================
-            FORMULAIRE REGEX (page Profil)
-            ========================= */
-
-            const regexUsername = /^[a-zA-Z0-9_-]{3,16}$/;
-            const regexEmail = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-            const regexPassword = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#+=&$^*.(){}_?!'"\-])\S{8,}$/;
-
-            function validerChamp(valeur, regex, idErreur, messageErreur) {
-                if (regex.test(valeur.trim())) {
-                    $('#' + idErreur).text('').hide();
-                    return true;
-                } else {
-                    $('#' + idErreur).text(messageErreur).show();
-                    return false;
-                }
-            }
-
-            // ----- INSCRIPTION -----
-
-            $('#togglePassword').click(function () {
-                const input = $('#inputPassword');
-                const isHidden = input.attr('type') === 'password';
-                input.attr('type', isHidden ? 'text' : 'password');
-                $('#iconEyeOpen').toggle(isHidden);
-                $('#iconEyeClosed').toggle(!isHidden);
-            });
-
-            $('#inputUsername').on('input', function () {
-                validerChamp($(this).val(), regexUsername, 'errUsername', '⚠️ Username invalide (3-16 caractères : lettres, chiffres, _ ou -)');
-            });
-            $('#inputEmail').on('input', function () {
-                validerChamp($(this).val(), regexEmail, 'errEmail', '⚠️ Email invalide (ex: jean@exemple.com)');
-            });
-            $('#inputPassword').on('input', function () {
-                validerChamp($(this).val(), regexPassword, 'errPassword', '⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)');
-            });
-
-            $('#btnSubmit').click(function () {
-                const okUser = validerChamp($('#inputUsername').val(), regexUsername, 'errUsername', '⚠️ Username invalide (3-16 caractères : lettres, chiffres, _ ou -)');
-                const okEmail = validerChamp($('#inputEmail').val(), regexEmail, 'errEmail', '⚠️ Email invalide (ex: jean@exemple.com)');
-                const okPass = validerChamp($('#inputPassword').val(), regexPassword, 'errPassword', '⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)');
-
-                if (okUser && okEmail && okPass) {
-                    $('#formSuccess').slideDown(400, function () {
-                        setTimeout(function () {
-                            $('#formSuccess').slideUp(400);
-                            $('#inputUsername, #inputEmail, #inputPassword').val('');
-                        }, 3000);
-                    });
-                }
-            });
-
-            $('#btnReset').click(function () {
-                $('#inputUsername, #inputEmail, #inputPassword').val('');
-                $('#formulaire-inscription .form-error').text('').hide();
-                $('#formSuccess').hide();
-            });
-
-            // ----- CONNEXION -----
-
-            $('#togglePasswordCx').click(function () {
-                const input = $('#inputPasswordCx');
-                const isHidden = input.attr('type') === 'password';
-                input.attr('type', isHidden ? 'text' : 'password');
-                $('#iconEyeOpenCx').toggle(isHidden);
-                $('#iconEyeClosedCx').toggle(!isHidden);
-            });
-
-            $('#inputEmailCx').on('input', function () {
-                validerChamp($(this).val(), regexEmail, 'errEmailCx', '⚠️ Email invalide (ex: jean@exemple.com)');
-            });
-            $('#inputPasswordCx').on('input', function () {
-                validerChamp($(this).val(), regexPassword, 'errPasswordCx', '⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)');
-            });
-
-            $('#btnSubmitCx').click(function () {
-                const okEmail = validerChamp($('#inputEmailCx').val(), regexEmail, 'errEmailCx', '⚠️ Email invalide (ex: jean@exemple.com)');
-                const okPass = validerChamp($('#inputPasswordCx').val(), regexPassword, 'errPasswordCx', '⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)');
-
-                if (okEmail && okPass) {
-                    $('#formSuccessCx').slideDown(400, function () {
-                        setTimeout(function () {
-                            $('#formSuccessCx').slideUp(400);
-                            $('#inputEmailCx, #inputPasswordCx').val('');
-                        }, 3000);
-                    });
-                }
-            });
-
-            $('#btnResetCx').click(function () {
-                $('#inputEmailCx, #inputPasswordCx').val('');
-                $('#formulaire-connexion .form-error').text('').hide();
-                $('#formSuccessCx').hide();
-            });
-
-        });
-
-    </script>
 
 </body>
 

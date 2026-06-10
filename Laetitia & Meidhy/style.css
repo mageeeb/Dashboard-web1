@@ -136,6 +136,100 @@ body.dark .fakePage h2 {
 }
 
 /* =========================
+   HERO
+========================= */
+
+.hero {
+    background: linear-gradient(135deg, royalblue, purple);
+    color: white;
+    padding: 60px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero h2 {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    width: 70%;
+    line-height: 1.7;
+}
+
+/* =========================
+   CERCLES ANIMÉS
+========================= */
+
+.circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: white;
+    opacity: 0.2;
+    position: absolute;
+}
+
+.c1 {
+    top: 20px;
+    right: 50px;
+}
+
+.c2 {
+    bottom: 30px;
+    right: 180px;
+}
+
+.c3 {
+    top: 120px;
+    left: 40px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.statBox {
+    background: white;
+    flex: 1;
+    min-width: 220px;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.statBox h3 {
+    font-size: 40px;
+    color: royalblue;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   DARK MODE — HOME
+========================= */
+
+body.dark .statBox {
+    background: #2a2a2a;
+    color: #eee;
+}
+
+body.dark .statBox p {
+    color: #bbb;
+}
+
+body.dark .statBox h3 {
+    color: #6a9fd8;
+}
+
+/* =========================
    HEADER DASHBOARD
 ========================= */
 
@@ -358,405 +452,249 @@ body.dark .carte button {
 }
 
 /* =========================
-   HERO
-========================= */
-
-.hero {
-    background: linear-gradient(135deg, royalblue, purple);
-    color: white;
-    padding: 60px;
-    border-radius: 20px;
-    margin-bottom: 40px;
-    position: relative;
-    overflow: hidden;
-}
-
-.hero h2 {
-    font-size: 45px;
-    margin-bottom: 15px;
-}
-
-.hero p {
-    width: 70%;
-    line-height: 1.7;
-}
-
-/* =========================
-   CERCLES ANIMÉS
-========================= */
-
-.circle {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: white;
-    opacity: 0.2;
-    position: absolute;
-}
-
-.c1 {
-    top: 20px;
-    right: 50px;
-}
-
-.c2 {
-    bottom: 30px;
-    right: 180px;
-}
-
-.c3 {
-    top: 120px;
-    left: 40px;
-}
-
-/* =========================
-   STATS
-========================= */
-
-.stats {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.statBox {
-    background: white;
-    flex: 1;
-    min-width: 220px;
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-}
-
-.statBox h3 {
-    font-size: 40px;
-    color: royalblue;
-    margin-bottom: 10px;
-}
-
-/* =========================
-   DARK MODE — HOME
-========================= */
-
-body.dark .statBox {
-    background: #2a2a2a;
-    color: #eee;
-}
-
-body.dark .statBox p {
-    color: #bbb;
-}
-
-body.dark .statBox h3 {
-    color: #6a9fd8;
-}
-
-/* =========================
    FORMULAIRE D'INSCRIPTION
 ========================= */
 
-#formulaire-inscription {
-    margin-top: 20px;
-    text-align: left;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.form-group {
+body {
+    font-family: Arial, sans-serif;
+    background: #f4efe6;
+    min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    margin-bottom: 16px;
+    align-items: center;
+    justify-content: center;
 }
 
-.form-group label {
-    font-weight: bold;
+.auth-box {
+    background: white;
+    border: 2px solid #1a1a1a;
+    padding: 40px;
+    width: 460px;
+}
+
+.auth-box h1 {
+    font-size: 28px;
     margin-bottom: 6px;
-    color: #333;
+}
+
+.auth-box .sub {
+    color: #7a7268;
     font-size: 14px;
+    margin-bottom: 30px;
 }
 
-.form-group input,
-.form-group textarea {
-    padding: 10px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: Arial;
-    transition: border-color 0.2s;
-    background: #fff;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: royalblue;
-}
-
-.form-group textarea {
-    min-height: 90px;
-    resize: vertical;
-}
-
-.form-error {
-    color: #e53935;
-    font-size: 12px;
-    margin-top: 4px;
-    display: none;
-}
-
-/* =========================
-   BOUTONS
-========================= */
-
-.form-actions {
+/* Tabs */
+.tabs {
     display: flex;
-    gap: 10px;
+    gap: 0;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #1a1a1a;
+}
+
+.tab {
+    padding: 12px 0;
+    margin-right: 28px;
+    font-family: monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #7a7268;
+    position: relative;
+}
+
+.tab.active {
+    color: #1a1a1a;
+    font-weight: bold;
+}
+
+.tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #ff4d2e;
+}
+
+/* Champs */
+.field {
+    margin-bottom: 20px;
+}
+
+.field label {
+    display: block;
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px 0;
+    border: none;
+    border-bottom: 2px solid #1a1a1a;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.field input:focus {
+    border-bottom-color: #2d5fff;
+}
+
+.field .hint {
+    margin-top: 6px;
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    min-height: 14px;
+}
+
+/* États de validation */
+.field.error input {
+    border-bottom-color: #ff4d2e;
+}
+
+.field.error .hint {
+    color: #ff4d2e;
+    font-weight: bold;
+}
+
+.field.ok input {
+    border-bottom-color: #1aa179;
+}
+
+.field.ok .hint {
+    color: #1aa179;
+    font-weight: bold;
+}
+
+.field.ok .hint::before {
+    content: "✓ ";
+}
+
+/* Jauge mot de passe */
+.strength {
+    display: flex;
+    gap: 4px;
     margin-top: 8px;
 }
 
-#btnSubmit {
-    background: royalblue;
-    color: white;
-}
-
-#btnSubmit:hover {
-    background: #2747c4;
-}
-
-#btnReset {
-    background: #e0e0e0;
-    color: #333;
-}
-
-#btnReset:hover {
-    background: #ccc;
-}
-
-/* =========================
-   MESSAGE SUCCÈS
-========================= */
-
-#formSuccess {
-    display: none;
-    margin-top: 14px;
-    padding: 12px 16px;
-    background: #e8f5e9;
-    color: #2e7d32;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-/* =========================
-   ŒEIL MOT DE PASSE
-========================= */
-
-.password-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.password-wrapper input {
+.strength span {
     flex: 1;
-    padding-right: 44px;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    transition: background 0.3s;
 }
 
-#togglePassword {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 40px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0 6px 6px 0;
-    transition: background 0.2s;
+.strength span.faible {
+    background: #ff4d2e;
 }
 
-#togglePassword:hover {
-    background: rgba(0, 0, 0, 0.06);
+.strength span.moyen {
+    background: #ffd23f;
 }
 
-/* =========================
-   DARK MODE — PROFIL
-========================= */
-
-body.dark .form-group label {
-    color: #ccc;
+.strength span.fort {
+    background: #1aa179;
 }
 
-body.dark .form-group input,
-body.dark .form-group textarea {
-    background: #333;
-    color: #eee;
-    border-color: #555;
-}
-
-body.dark .form-group input::placeholder,
-body.dark .form-group textarea::placeholder {
-    color: #888;
-}
-
-body.dark .form-group input:focus,
-body.dark .form-group textarea:focus {
-    border-color: royalblue;
-}
-
-body.dark #btnSubmit {
-    background: royalblue;
+/* Bouton */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: #1a1a1a;
     color: white;
-    border-color: royalblue;
-}
-
-body.dark #btnSubmit:hover {
-    background: #2747c4;
-}
-
-body.dark #btnReset {
-    background: #444;
-    color: #eee;
-    border-color: #666;
-}
-
-body.dark #btnReset:hover {
-    background: #555;
-}
-
-body.dark #togglePassword {
-    background: transparent;
     border: none;
-    color: #eee;
-}
-
-body.dark #formSuccess {
-    background: #1b5e20;
-    color: #c8e6c9;
-}
-
-body.dark #togglePassword:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
-/* =========================
-   ONGLETS INSCRIPTION / CONNEXION
-========================= */
-
-.form-tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: 24px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.tab-title {
-    padding: 12px 28px;
+    font-family: monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
     cursor: pointer;
-    font-size: 18px;
-    color: #888;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    transition: color 0.2s, border-color 0.2s;
-    user-select: none;
-    float: left;
+    margin-top: 10px;
+    transition: background 0.2s, transform 0.15s;
 }
 
-.tab-title:hover {
-    color: royalblue;
+.submit-btn:hover {
+    background: #ff4d2e;
 }
 
-.tab-title.activeTab {
-    color: royalblue;
-    border-bottom-color: royalblue;
-    font-weight: bold;
+.submit-btn.shake {
+    animation: shake 0.4s;
 }
 
-body.dark .form-tabs {
-    border-bottom-color: #444;
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-8px);
+    }
+
+    75% {
+        transform: translateX(8px);
+    }
 }
 
-body.dark .tab-title {
-    color: #888;
-}
-
-body.dark .tab-title:hover,
-body.dark .tab-title.activeTab {
-    color: #6a9fd8;
-    border-bottom-color: #6a9fd8;
-}
-
-/* =========================
-   FORMULAIRE De connexion
-========================= */
-
-#formulaire-connexion {
-    display: none;
-}
-
-#formSuccessCx {
-    display: none;
-    margin-top: 14px;
+/* Flash message */
+.flash {
+    margin-top: 16px;
     padding: 12px 16px;
-    background: #e8f5e9;
-    color: #2e7d32;
-    border-radius: 8px;
-    font-size: 14px;
+    font-family: monospace;
+    font-size: 12px;
+    border-left: 4px solid;
+    display: none;
 }
 
-#btnSubmitCx {
-    background: royalblue;
+.flash.ok {
+    background: rgba(26, 161, 121, 0.1);
+    border-color: #1aa179;
+    color: #1aa179;
+}
+
+.flash.err {
+    background: rgba(255, 77, 46, 0.1);
+    border-color: #ff4d2e;
+    color: #ff4d2e;
+}
+
+/* Page de bienvenue (cachée au départ) */
+#welcome {
+    text-align: center;
+    display: none;
+}
+
+#welcome h2 {
+    font-size: 36px;
+    margin-bottom: 12px;
+}
+
+#welcome p {
+    color: #7a7268;
+    margin-bottom: 24px;
+}
+
+#welcome .logout {
+    padding: 10px 24px;
+    background: #1a1a1a;
     color: white;
-}
-
-#btnSubmitCx:hover {
-    background: #2747c4;
-}
-
-#btnResetCx {
-    background: #e0e0e0;
-    color: #333;
-}
-
-#btnResetCx:hover{
-    background: #ccc;
-}
-
-#togglePasswordCx {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 40px;
-    padding: 0;
-    background: transparent;
     border: none;
-    font-size: 16px;
+    font-family: monospace;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0 6px 6px 0;
-    transition: background 0.2s;
-}
-
-#togglePasswordCx:hover {
-    background: rgba(0, 0, 0, 0.06);
-}
-
-body.dark #formSuccessCx {
-    background: #1b5e20;
-    color: #c8e6c9;
-}
-
-body.dark #btnResetCx {
-    background: #444;
-    color: #eee;
-    border-color: #666;
-}
-
-body.dark #btnResetCx:hover {
-    background: #555;
 }
