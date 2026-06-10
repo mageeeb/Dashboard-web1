@@ -305,14 +305,7 @@ const visitedPages = new Set(["homePage"]); // Home visitée par défaut
 $(".navLink").on("click", function() {
 
     // Ton code ici ↓
-    function updateClock() {
-    const heure = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-    $("#clock").text(heure);
-}
- 
-updateClock();
-setInterval(updateClock, 60000);
-
+    
 });
 
 
@@ -331,21 +324,7 @@ setInterval(updateClock, 60000);
 $("#toggleMenu").on("click", function() {
 
     // Ton code ici ↓
-    $(".counter").each(function() {
-    const target = $(this).data("target");
-    const $el = $(this);
- 
-    $({ n: 0 }).animate({ n: target }, {
-        duration: 1500,
-        easing: "swing",
-        step: function() {
-            $el.text(Math.floor(this.n).toLocaleString("fr-FR"));
-        },
-        complete: function() {
-            $el.text(target.toLocaleString("fr-FR"));
-        }
-    });
-});
+    
 });
 
 </script>

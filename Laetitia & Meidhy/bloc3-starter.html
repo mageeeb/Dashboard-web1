@@ -373,7 +373,11 @@ $(".counter").each(function() {
 $("#barChart .bar").each(function(i) {
 
     // Ton code ici ↓
-
+    $(this).data("h");
+    $(".bar").each(function(i) {
+        $(this).delay(i * 100);
+        $(this).animate({height: h + "%"}, 700);
+    });
 });
 
 
