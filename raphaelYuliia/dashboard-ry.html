@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/dashboard-ry.css">
+<script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+<title>Navbar + Home Dynamique</title>
+</head>
+<body>
+
+<header>
+
+    <h1>Application jQuery</h1>
+    <div>
+    <button id="toggleMenu">
+        ☰ Menu
+    </button>
+    <button class="btn dark-mode-js">
+        🌙 Dark Mode
+    </button></div>
+
+
+</header>
+
+<div class="container">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <h2>Navigation</h2>
+
+        <ul>
+
+            <li class="navLink activeNav"
+                data-page="homePage">
+
+                🏠 Home
+
+            </li>
+
+            <li class="navLink"
+                data-page="dashboardPage">
+
+                📊 Dashboard
+
+            </li>
+
+            <li class="navLink"
+                data-page="profilePage">
+
+                👤 Profil
+
+            </li>
+
+            <li class="navLink"
+                data-page="settingsPage">
+
+                ⚙️ Paramètres
+
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main>
+
+        <!-- =========================
+             HOME PAGE
+        ========================= -->
+
+        <section id="homePage"
+                 class="page activePage">
+
+            <div class="hero">
+
+                <div class="circle c1"></div>
+                <div class="circle c2"></div>
+                <div class="circle c3"></div>
+
+                <h2>Bienvenue 🚀</h2>
+
+                <p>
+
+                    Ceci est une page Home dynamique
+                    créée avec jQuery.
+
+                    Les cercles bougent automatiquement
+                    et les compteurs sont animés.
+
+                </p>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="stats">
+
+                <div class="statBox">
+
+                    <h3 class="counter"
+                        data-target="250">
+
+                        0
+
+                    </h3>
+
+                    <p>Utilisateurs</p>
+
+                </div>
+
+
+                <div class="statBox">
+
+                    <h3 class="counter"
+                        data-target="120">
+
+                        0
+
+                    </h3>
+
+                    <p>Messages</p>
+
+                </div>
+
+
+                <div class="statBox">
+
+                    <h3 class="counter"
+                        data-target="95">
+
+                        0
+
+                    </h3>
+
+                    <p>Projets</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             DASHBOARD
+        ========================= -->
+
+        <section id="dashboardPage"
+                 class="page">
+
+
+
+                <h2>Dashboard</h2>
+
+                <br>
+
+                <section class="section cards-container">
+    <div class="cards">
+      <div class="card card-01-js"><strong> Carte 1 </strong> <br>Animation jQuery</div>
+      <div class="card card-02-js"><strong> Carte 2 </strong> <br>Manipulation DOM</div>
+      <div class="card card-03-js"><strong> Carte 3 </strong> <br>Effets visuels</div>
+    </div>
+  </section>
+  <section class="section ">
+    <h2>Contrôles</h2>
+    <button id="lancer">Lancer animation</button><button id="stop">Stop animation</button> <button id="clear">Clear animation</button><button id="masquer">Masquer
+      galerie</button><button id="afficher">Afficher galerie</button>
+    <div class="animBox" style="display: flex; gap: 20px">
+      <div class="box1"></div>
+      <div class="box2"></div>
+      <div class="box3"></div>
+      <div class="box4"></div>
+    </div>
+  </section>
+  <section class="section">
+    <button class="btn btn-notif-js">Afficher la notification</button>
+    <p class="notification"> <img class="icon" src="../notification.png" width="20" alt=""> There is a notification</p>
+  </section>
+  <section class="section">
+
+    <h2>Manipulation attr()</h2>
+    <form action="">
+      <input id="inputAnim" type="text" placeholder="Votre nom" disabled>
+    </form>
+    <button type="button" id="enableBtn">Activé le champ</button>
+    <button type="button" id="disableBtn">Désactivé le champ</button>
+  </section>
+
+            
+
+        </section>
+
+
+        <!-- =========================
+             PROFILE
+        ========================= -->
+
+        <section id="profilePage"
+                 class="page">
+
+            <div class="fakePage">
+
+                <h2>Profil</h2>
+
+                <br>
+
+                <p>
+                    Contenu du profil.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             SETTINGS
+        ========================= -->
+
+        <section id="settingsPage"
+                 class="page">
+
+            <div class="fakePage">
+
+                <h2>Paramètres</h2>
+
+                <br>
+
+                <p>
+                    Contenu des paramètres.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+</div>
+<script src="js/dashboard-ry.js"></script>
+</body>
+</html>

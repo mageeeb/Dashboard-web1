@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard jQuery</title>
+
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+<link rel="stylesheet" href="style.css">
+    <style>
+       
+    </style>
+</head>
+
+<body>
+
+    <!-- SPLINE BACKGROUND (dark mode) -->
+    <div class="spline-container" style="position:fixed;inset:0;z-index:-1;display:none;">
+        <iframe src="https://my.spline.design/animatedbackgroundgradientforweb-jvJDeBWjMvShkjPKxPRUswLq" frameborder="0"
+            width="100%" height="100%"></iframe>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Dashboard jQuery</h1>
+        <div class="header-buttons">
+            <button id="toggleMenu">☰ Menu</button>
+            <button id="themeBtn">🌙 Dark Mode</button>
+        </div>
+    </header>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-inner">
+                <h2>Navigation</h2>
+                <ul>
+                    <li class="navLink activeNav" data-page="homePage">🏠 Home</li>
+                    <li class="navLink" data-page="dashboardPage">📊 Dashboard</li>
+                    <li class="navLink" data-page="profilePage">👤 Profil</li>
+                    <li class="navLink" data-page="settingsPage">⚙️ Paramètres</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main>
+
+            <!-- =========================
+                 HOME PAGE
+            ========================= -->
+            <section id="homePage" class="page activePage">
+
+                <div class="hero">
+                    <div class="circle-deco c1"></div>
+                    <div class="circle-deco c2"></div>
+                    <div class="circle-deco c3"></div>
+
+                    <h2>Bienvenue 🚀</h2>
+                    <p>
+                        Ceci est une page Home dynamique créée avec jQuery.
+                        Les cercles bougent automatiquement et les compteurs sont animés.
+                    </p>
+                </div>
+
+                <div class="stats">
+                    <div class="statBox">
+                        <h3 class="counter" data-target="250">0</h3>
+                        <p>Utilisateurs</p>
+                    </div>
+                    <div class="statBox">
+                        <h3 class="counter" data-target="120">0</h3>
+                        <p>Messages</p>
+                    </div>
+                    <div class="statBox">
+                        <h3 class="counter" data-target="95">0</h3>
+                        <p>Projets</p>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 DASHBOARD PAGE
+            ========================= -->
+            <section id="dashboardPage" class="page">
+
+                <div class="card-container">
+                    <div class="card">
+                        <h3>Carte 1</h3>
+                        <p>Animation jQuery</p>
+                    </div>
+                    <div class="card">
+                        <h3>Carte 2</h3>
+                        <p>Manipulation DOM</p>
+                    </div>
+                    <div class="card">
+                        <h3>Carte 3</h3>
+                        <p>Effets visuels</p>
+                    </div>
+                </div>
+
+                <p class="section-title">Contrôles</p>
+                <div class="controls">
+                    <button id="animateBtn">Lancer animation</button>
+                    <button id="stopBtn">Stop animation</button>
+                    <button id="hideBtn">Masquer galerie</button>
+                    <button id="showBtn">Afficher galerie</button>
+                </div>
+
+                <div class="square-container">
+                    <div id="square1" class="square"></div>
+                    <div id="square2" class="square"></div>
+                    <div id="square3" class="square"></div>
+                    <div id="square4" class="square"></div>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                    <button id="notifBtn">Afficher notification</button>
+                </div>
+
+                <div class="notification">Notification affichée !</div>
+
+                <div class="form-box">
+                    <h3>Manipulation attr()</h3>
+                    <input type="text" id="champ" value="Votre nom">
+                    <div class="form-actions">
+                        <button id="disableBtn">Disable</button>
+                        <button id="enableBtn">Enable</button>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- =========================
+                 PROFIL PAGE
+            ========================= -->
+            <section id="profilePage" class="page">
+                <div class="fakePage">
+                    <h2>Profil</h2>
+                    <br>
+                    <p>Contenu du profil.</p>
+                </div>
+            </section>
+
+            <!-- =========================
+                 PARAMÈTRES PAGE
+            ========================= -->
+            <section id="settingsPage" class="page">
+                <div class="fakePage">
+                    <h2>Paramètres</h2>
+                    <br>
+                    <p>Contenu des paramètres.</p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        $(function () {
+
+            /* =========================
+               NAVIGATION SIDEBAR
+            ========================= */
+            $(".navLink").click(function () {
+
+                // Active le lien cliqué
+                $(".navLink").removeClass("activeNav");
+                $(this).addClass("activeNav");
+
+                // Récupère l'id de la page cible
+                let page = $(this).data("page");
+
+                // Cache toutes les pages
+                $(".page").removeClass("activePage").hide();
+
+                // Affiche la page cible
+                $("#" + page).fadeIn(400).addClass("activePage");
+            });
+
+            /* =========================
+               TOGGLE SIDEBAR
+            ========================= */
+            $("#toggleMenu").click(function () {
+                $("#sidebar").toggleClass("open");
+            });
+
+            /* =========================
+               DARK MODE
+            ========================= */
+            $("#themeBtn").click(function () {
+                $("body").toggleClass("dark");
+                if ($("body").hasClass("dark")) {
+                    $(".spline-container").fadeIn();
+                    $(this).text("☀️ Light Mode");
+                } else {
+                    $(".spline-container").fadeOut();
+                    $(this).text("🌙 Dark Mode");
+                }
+            });
+
+            /* =========================
+               COUNTERS ANIMÉS (Home)
+            ========================= */
+            $(".counter").each(function () {
+                let target = $(this).data("target");
+                let counter = $(this);
+
+                $({ countNum: 0 }).animate({ countNum: target }, {
+                    duration: 2000,
+                    easing: "swing",
+                    step: function () {
+                        counter.text(Math.floor(this.countNum));
+                    },
+                    complete: function () {
+                        counter.text(this.countNum);
+                    }
+                });
+            });
+
+            /* =========================
+               CERCLES ANIMÉS (Home)
+            ========================= */
+            setInterval(function () {
+                $(".c1")
+                    .animate({ top: "60px" }, 1000)
+                    .animate({ top: "20px" }, 1000);
+
+                $(".c2")
+                    .animate({ right: "250px" }, 1000)
+                    .animate({ right: "180px" }, 1000);
+
+                $(".c3")
+                    .animate({ left: "80px" }, 1000)
+                    .animate({ left: "40px" }, 1000);
+            }, 2000);
+
+            /* =========================
+               CARDS (Dashboard)
+            ========================= */
+            $('.card').click(function () {
+                $(this).animate({ top: "-=20px" }).animate({ top: "+=20px" });
+            });
+
+            /* =========================
+               ANIMATE SQUARE1
+            ========================= */
+            $("#animateBtn").click(function () {
+                $("#square1")
+                    .animate({ left: "200px" }, 500)
+                    .animate({ top: "100px" }, 500)
+                    .animate({ left: "0px" }, 500)
+                    .animate({ top: "0px" }, 500);
+            });
+
+            $("#stopBtn").click(function () {
+                $("#square1").stop(true, true);
+            });
+
+            /* =========================
+               SQUARE2 → CERCLE
+            ========================= */
+            $("#square2").click(function () {
+                $(this).addClass('circle').off('click');
+            });
+
+            /* =========================
+               SQUARE3 → SLIDE
+            ========================= */
+            $("#square3").click(function () {
+                $(this).animate({ left: "80px" }, 500).animate({ left: "0px" }, 500);
+            });
+
+            /* =========================
+               SQUARE4 → ROTATE
+            ========================= */
+            $("#square4").click(function () {
+                $(this).toggleClass("rotate");
+            });
+
+            /* =========================
+               HIDE / SHOW GALERIE
+            ========================= */
+            $("#hideBtn").click(function () {
+                $(".square-container").hide();
+            });
+
+            $("#showBtn").click(function () {
+                $(".square-container").show();
+            });
+
+            /* =========================
+               NOTIFICATION
+            ========================= */
+            $("#notifBtn").click(function () {
+                $(".notification").fadeIn();
+                setTimeout(function () {
+                    $(".notification").fadeOut();
+                }, 2000);
+            });
+
+            /* =========================
+               DISABLE / ENABLE INPUT
+            ========================= */
+            $("#disableBtn").click(function () {
+                $("#champ").attr("disabled", true);
+            });
+
+            $("#enableBtn").click(function () {
+                $("#champ").attr("disabled", false);
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

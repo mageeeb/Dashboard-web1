@@ -1,0 +1,404 @@
+/* =========================
+   RESET
+========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+    overflow-x:hidden;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header{
+    background:#111;
+    color:white;
+    padding:20px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h1{
+    font-size:28px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+    display:flex;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    width:250px;
+    min-height:100vh;
+    background:#222;
+    color:white;
+    padding:20px;
+}
+
+.sidebar h2{
+    margin-bottom:20px;
+}
+
+.sidebar ul{
+    list-style:none;
+}
+
+.sidebar li{
+    padding:14px;
+    background:#333;
+    margin-bottom:12px;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.sidebar li:hover{
+    background:royalblue;
+    transform:translateX(10px);
+}
+
+.activeNav{
+    background:royalblue !important;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main{
+    flex:1;
+    padding:30px;
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.page{
+    display:none;
+}
+
+.activePage{
+    display:block;
+}
+
+/* =========================
+   HOME PAGE
+========================= */
+
+.hero{
+    background:linear-gradient(135deg, royalblue, purple);
+    color:white;
+    padding:60px;
+    border-radius:20px;
+    margin-bottom:40px;
+    position:relative;
+    overflow:hidden;
+}
+
+.hero h2{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    width:70%;
+    line-height:1.7;
+}
+
+/* =========================
+   CIRCLES
+========================= */
+
+.circle{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    opacity:0.2;
+    position:absolute;
+}
+
+.c1{
+    top:20px;
+    right:50px;
+}
+
+.c2{
+    bottom:30px;
+    right:180px;
+}
+
+.c3{
+    top:120px;
+    left:40px;
+}
+
+/* =========================
+   STATS
+========================= */
+
+.stats{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.statBox{
+    background:white;
+    flex:1;
+    min-width:220px;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+}
+
+.statBox h3{
+    font-size:40px;
+    color:royalblue;
+    margin-bottom:10px;
+}
+
+/* =========================
+   AUTRES PAGES
+========================= */
+
+.fakePage{
+    background:white;
+    padding:40px;
+    border-radius:20px;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+:root {
+  --body-bg-color: #e0e0e0e0;
+  --body-bg-color-dark: #121212;
+  --white: #fff;
+  --black: #000;
+}
+
+* {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--body-bg-color);
+  color: var(--black);
+}
+
+.bodyDarkMode {
+  background: var(--body-bg-color-dark);
+  color: var(--white);
+}
+
+.section {
+  margin: 20px 20px 40px 20px;
+}
+
+/* HEADER */
+.header {
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #1c1c1c;
+  align-items: center;
+  border-bottom: 1px solid white;
+}
+
+.btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--white);
+  position: relative;
+  z-index: 1000;
+}
+
+p {
+  color: white;
+  font-size: 22px;
+
+}
+
+/* ----------------- */
+/* SECTION CARDS */
+
+.cards {
+  display: flex;
+  gap: 20px;
+}
+
+.card {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 20px;
+  overflow: hidden;
+  background-color: var(--white);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  color: var(--black);
+  position: relative;
+  width: 172px;
+  cursor: pointer;
+  display: inline-block;
+  transition: width 0.5s ease;
+}
+
+.card:hover {
+  border-color: blue;
+  width: 200px;
+}
+
+.card:nth-child(3) {
+  transition: transform 0.5s ease, background-color 0.5s ease;
+}
+
+.card:nth-child(2) {
+  min-width: 200px;
+}
+
+.img {
+  margin: -20px -20px;
+  width: calc(100% + 40px);
+  height: 81px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  opacity: 0;
+}
+
+/* ----------------- */
+.box1 {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(0, 160, 253);
+  position: relative;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.box2 {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(192, 113, 39);
+  position: relative;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.box3 {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(0, 255, 128);
+  position: relative;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+.box4 {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(255, 0, 0);
+  position: relative;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+/* NOTIFICATION BTN */
+.notification {
+  align-items: center;
+  border: 1px solid #3B6D11;
+  background: rgba(0, 128, 0, 0.5);
+  color: var(--white);
+  padding: 8px;
+  border-radius: 12px;
+  font-size: 18px;
+  opacity: 0;
+  width: 200px;
+}
+
+.icon {
+  margin-right: 4px;
+
+}
+
+
+.animBox {
+  margin-top: 20px;
+}
+
+.section button {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  margin-right: 10px;
+  color: var(--black);
+  width: 165px;
+  cursor: pointer;
+  display: inline-block;
+  transition: width 0.5s ease;
+}
+
+.section button:hover {
+  border-color: blue;
+  width: 170px;
+}
+
+.animBox div:hover{
+  border-color: blue;
+
+}
+
+#inputAnim{
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.active{
+    border-color: blue;
+
+}
