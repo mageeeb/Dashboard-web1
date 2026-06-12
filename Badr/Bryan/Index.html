@@ -7,6 +7,7 @@
     <title>Dashboard jQuery</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+<<<<<<< HEAD
 
     <style>
         /* =========================
@@ -517,6 +518,47 @@
 
         body.dark .fakePage p {
             color: rgba(255, 255, 255, 0.6);
+=======
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #userCard {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            margin: 24px auto;
+            color: #fffaf0;
+        }
+
+        .avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #ff4d2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .userInfo h3 {
+            margin: 0 0 6px;
+            font-size: 20px;
+            color: #ff4d2e;
+        }
+
+        .userInfo p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: rgba(255,250,240,0.6);
+>>>>>>> badr
         }
     </style>
 </head>
@@ -650,8 +692,15 @@
             <section id="profilePage" class="page">
                 <div class="fakePage">
                     <h2>Profil</h2>
-                    <br>
-                    <p>Contenu du profil.</p>
+
+                    <div id="userCard">
+                        <div class="avatar" id="userAvatar"></div>
+                        <div class="userInfo">
+                            <h3 id="userName">—</h3>
+                            <p id="userEmail">—</p>
+                            <p id="userDate">—</p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -673,21 +722,29 @@
         $(function () {
 
             /* =========================
+               INFOS UTILISATEUR (URL params)
+            ========================= */
+          const username = sessionStorage.getItem("username");
+const email    = sessionStorage.getItem("email");
+const date     = new Date().toLocaleDateString("fr-FR", {
+    day: "2-digit", month: "long", year: "numeric"
+});
+
+if (username) {
+    $("#userAvatar").text(username.charAt(0).toUpperCase());
+    $("#userName").text(username);
+    $("#userEmail").text(email || "Email non disponible");
+    $("#userDate").text("Inscrit le " + date);
+}
+            /* =========================
                NAVIGATION SIDEBAR
             ========================= */
             $(".navLink").click(function () {
-
-                // Active le lien cliqué
                 $(".navLink").removeClass("activeNav");
                 $(this).addClass("activeNav");
 
-                // Récupère l'id de la page cible
                 let page = $(this).data("page");
-
-                // Cache toutes les pages
                 $(".page").removeClass("activePage").hide();
-
-                // Affiche la page cible
                 $("#" + page).fadeIn(400).addClass("activePage");
             });
 
@@ -716,7 +773,7 @@
                COUNTERS ANIMÉS (Home)
             ========================= */
             $(".counter").each(function () {
-                let target = $(this).data("target");
+                let target  = $(this).data("target");
                 let counter = $(this);
 
                 $({ countNum: 0 }).animate({ countNum: target }, {
@@ -832,6 +889,18 @@
             });
 
         });
+        const username = sessionStorage.getItem("username");
+const email    = sessionStorage.getItem("email");
+const date     = new Date().toLocaleDateString("fr-FR", {
+    day: "2-digit", month: "long", year: "numeric"
+});
+
+if (username) {
+    $("#userAvatar").text(username.charAt(0).toUpperCase());
+    $("#userName").text(username);
+    $("#userEmail").text(email || "Email non disponible");
+    $("#userDate").text("Inscrit le " + date);
+}
     </script>
 
 </body>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BLOC 1 — Authentification & Regex</title>
 
+<<<<<<< HEAD
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
@@ -256,6 +257,9 @@
             cursor: pointer;
         }
     </style>
+=======
+
+>>>>>>> badr
 </head>
 
 <body>
@@ -351,6 +355,7 @@
     </div>
 
 
+<<<<<<< HEAD
     <script>
         /* ============================================================
            ÉTAT GLOBAL (stocke le compte inscrit en mémoire)
@@ -612,6 +617,92 @@
                 $("#welcomeMsg").html(msg);
                 $("#welcome").fadeIn(400);
             });
+=======
+<script>
+/* ============================================================
+   ÉTAT GLOBAL
+============================================================ */
+let registeredUser = null;
+let isLoggedIn = false;
+
+
+/* ============================================================
+   REGEX
+============================================================ */
+const REGEX = {
+    username: /^[a-zA-Z0-9_-]{3,16}$/,
+    email:    /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/,
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_\-+=]).{8,}$/,
+};
+
+
+/* ============================================================
+   TABS
+============================================================ */
+$(".tab").on("click", function() {
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
+
+    const form = $(this).data("form");
+    $("#signupForm, #loginForm").hide();
+    $("#" + form).fadeIn(300);
+});
+
+
+/* ============================================================
+   VALIDATION TEMPS RÉEL — username
+============================================================ */
+$("#signup-username").on("keyup", function() {
+    $("#f-username").removeClass("ok error");
+    const val = $(this).val();
+
+    if (REGEX.username.test(val)) {
+        $("#f-username").addClass("ok");
+        $("#f-username .hint").text("Nom d'utilisateur valide !");
+    } else {
+        $("#f-username").addClass("error");
+        $("#f-username .hint").text("3-16 caractères : lettres, chiffres, _ ou -");
+    }
+});
+
+
+/* ============================================================
+   VALIDATION TEMPS RÉEL — email
+============================================================ */
+$("#signup-email").on("keyup", function() {
+    $("#f-email").removeClass("ok error");
+    const val = $(this).val();
+
+    if (REGEX.email.test(val)) {
+        $("#f-email").addClass("ok");
+        $("#f-email .hint").text("Email valide !");
+    } else {
+        $("#f-email").addClass("error");
+        $("#f-email .hint").text("Format requis : prenom@domaine.com");
+    }
+});
+
+
+/* ============================================================
+   VALIDATION TEMPS RÉEL — password + jauge de force
+============================================================ */
+$("#signup-password").on("keyup", function() {
+    const password = $(this).val();
+    let score = 0;
+
+    if (password.length >= 8)                    score++;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+    if (/[0-9]/.test(password))                  score++;
+    if (/[!@#$%^&*()_\-+=]/.test(password))      score++;
+
+    $(".strength span").each(function(i) {
+        $(this).removeClass("faible moyen fort");
+
+        if (i < score) {
+            if (score <= 1)      $(this).addClass("faible");
+            else if (score <= 3) $(this).addClass("moyen");
+            else                 $(this).addClass("fort");
+>>>>>>> badr
         }
 
         $("#logoutBtn").on("click", function () {
@@ -623,9 +714,134 @@
             });
         });
 
+<<<<<<< HEAD
     </script>
 
     <!-- ============================================================
+=======
+    if (REGEX.password.test(password)) {
+        $("#f-password").addClass("ok");
+        $("#f-password .hint").text("Mot de passe valide !");
+    } else {
+        $("#f-password").addClass("error");
+        $("#f-password .hint").text("8+ caractères, majuscule, chiffre, spécial");
+    }
+});
+
+
+/* ============================================================
+   BOUTON INSCRIPTION
+============================================================ */
+$("#signupBtn").on("click", function() {
+    const username = $("#signup-username").val().trim();
+    const email    = $("#signup-email").val().trim();
+    const password = $("#signup-password").val().trim();
+
+    const errors = [];
+    if (!REGEX.username.test(username)) errors.push("Nom d'utilisateur invalide.");
+    if (!REGEX.email.test(email))       errors.push("Email invalide.");
+    if (!REGEX.password.test(password)) errors.push("Mot de passe invalide.");
+
+    if (errors.length > 0) {
+        $(this).addClass("shake");
+        setTimeout(() => $(this).removeClass("shake"), 500);
+        $("#signupFlash")
+            .removeClass("ok").addClass("err")
+            .html(errors.join("<br>"))
+            .slideDown(300);
+        return;
+    }
+
+    registeredUser = { username, email, password };
+
+    $("#signupFlash")
+        .removeClass("err").addClass("ok")
+        .text("Compte créé ! Connexion en cours…")
+        .slideDown(300);
+
+    setTimeout(() => doLogin(), 800);
+});
+
+
+/* ============================================================
+   BOUTON CONNEXION
+============================================================ */
+$("#loginBtn").on("click", function() {
+    const email    = $("#login-email").val().trim();
+    const password = $("#login-password").val().trim();
+
+    if (!registeredUser) {
+        $("#loginFlash")
+            .removeClass("ok").addClass("err")
+            .text("Inscris-toi d'abord !")
+            .slideDown(300);
+        return;
+    }
+
+    if (!REGEX.email.test(email)) {
+        $("#loginFlash")
+            .removeClass("ok").addClass("err")
+            .text("Email invalide !")
+            .slideDown(300);
+        return;
+    }
+
+    if (email !== registeredUser.email || password !== registeredUser.password) {
+        $(this).addClass("shake");
+        setTimeout(() => $(this).removeClass("shake"), 500);
+        $("#loginFlash")
+            .removeClass("ok").addClass("err")
+            .text("Email ou mot de passe incorrect !")
+            .slideDown(300);
+        return;
+    }
+
+    doLogin();
+});
+
+
+/* ============================================================
+   CONNEXION / DÉCONNEXION
+============================================================ */
+function doLogin() {
+    $("#authBox").fadeOut(400, function() {
+        const msg = "Bienvenue <strong>" + registeredUser.username + "</strong> ! Tu es connecté·e.";
+        $("#welcomeMsg").html(msg);
+        $("#welcome").fadeIn(400);
+
+        setTimeout(() => {
+            window.location.href = "index.html?user=" + registeredUser.username;
+        }, 1500);
+    });
+}
+
+$("#logoutBtn").on("click", function() {
+    $("#welcome").fadeOut(400, function() {
+        $("#login-email, #login-password").val("");
+        $(".flash").hide();
+        $(".tab").first().trigger("click");
+        $("#authBox").fadeIn(400);
+    });
+});
+function doLogin() {
+    // Sauvegarde les infos dans sessionStorage
+    sessionStorage.setItem("username", registeredUser.username);
+    sessionStorage.setItem("email", registeredUser.email);
+
+    $("#authBox").fadeOut(400, function() {
+        const msg = "Bienvenue <strong>" + registeredUser.username + "</strong> !";
+        $("#welcomeMsg").html(msg);
+        $("#welcome").fadeIn(400);
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1500);
+    });
+}
+</script>
+
+<!-- ============================================================
+>>>>>>> badr
      FOOTER PIXELBAOBAB
 ============================================================ -->
     <footer style="
