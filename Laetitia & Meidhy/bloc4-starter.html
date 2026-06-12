@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BLOC 4 — Cours jQuery Interactif</title>
-
+ 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
+ 
 <style>
 /* ============================================================
    BASE — fourni, ne pas modifier
 ============================================================ */
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: Arial, sans-serif; background: #f4efe6; padding: 40px; }
-
+ 
 h1 { font-size: 42px; margin-bottom: 6px; }
 .page-sub {
     font-family: monospace;
@@ -23,7 +23,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     letter-spacing: 0.1em;
     margin-bottom: 30px;
 }
-
+ 
 /* Sommaire */
 .toc {
     display: flex;
@@ -46,7 +46,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     transition: background 0.2s, color 0.2s;
 }
 .toc-btn:hover { background: #ff4d2e; color: white; border-color: #ff4d2e; }
-
+ 
 /* Leçon accordéon */
 .lesson {
     background: white;
@@ -78,10 +78,10 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     font-family: monospace;
 }
 .lesson.open .lesson-head .toggle { transform: rotate(45deg); }
-
+ 
 /* Corps de la leçon — CACHÉ par défaut */
-
-
+/* .lesson-body { display: none; padding: 28px; } */
+ 
 /* Bloc démo : code à gauche, résultat à droite */
 .demo {
     display: grid;
@@ -110,7 +110,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
 .demo-code .kw  { color: #ff8c69; }
 .demo-code .str { color: #a3e635; }
 .demo-code .com { color: #6b7280; font-style: italic; }
-
+ 
 .demo-result {
     background: #f4efe6;
     border-left: 2px solid #1a1a1a;
@@ -126,7 +126,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     letter-spacing: 0.12em;
     text-transform: uppercase;
 }
-
+ 
 /* Boutons de démo */
 .run-btn {
     align-self: flex-start;
@@ -143,7 +143,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
 }
 .run-btn:hover { transform: translateY(-2px); }
 .run-btn.dark  { background: #1a1a1a; }
-
+ 
 /* Éléments de démo réutilisables */
 .demo-box {
     width: 90px; height: 90px;
@@ -182,7 +182,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     font-size: 13px;
     min-height: 44px;
 }
-
+ 
 /* Astuce */
 .tip {
     margin-top: 16px;
@@ -193,7 +193,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     line-height: 1.6;
 }
 .tip strong { font-style: italic; }
-
+ 
 /* Compteur de leçons ouvertes */
 #progress-counter {
     margin-bottom: 28px;
@@ -208,13 +208,13 @@ h1 { font-size: 42px; margin-bottom: 6px; }
 </style>
 </head>
 <body>
-
+ 
 <h1>Cours jQuery</h1>
 <div class="page-sub">4 chapitres — Démos interactives — Clique pour tester</div>
-
+ 
 <!-- Compteur de progression -->
 <div id="progress-counter">0 / 4 chapitres ouverts</div>
-
+ 
 <!-- Sommaire -->
 <div class="toc">
     <button class="toc-btn" data-target="lesson-1">01. Sélecteurs</button>
@@ -222,25 +222,25 @@ h1 { font-size: 42px; margin-bottom: 6px; }
     <button class="toc-btn" data-target="lesson-3">03. Effets</button>
     <button class="toc-btn" data-target="lesson-4">04. DOM</button>
 </div>
-
-
+ 
+ 
 <!-- ============================================================
      LEÇON 1 — LES SÉLECTEURS
 ============================================================ -->
 <div class="lesson" id="lesson-1">
-
+ 
     <div class="lesson-head">
         <h3><span class="ch">CH 01</span> Les sélecteurs</h3>
         <span class="toggle">+</span>
     </div>
-
+ 
     <div class="lesson-body">
-
+ 
         <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
             jQuery permet de cibler des éléments du DOM avec la même syntaxe que CSS.
             Tout passe par <code>$()</code>.
         </p>
-
+ 
         <!-- DÉMO 1a : sélection par classe -->
         <div class="demo">
             <div class="demo-code">
@@ -258,7 +258,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-1a">▶ Exécuter</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 1b : :eq() -->
         <div class="demo">
             <div class="demo-code">
@@ -276,33 +276,33 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-1b">▶ Exécuter</button>
             </div>
         </div>
-
+ 
         <div class="tip">
             <strong>À retenir :</strong> <code>$(this)</code> dans un événement
             représente l'élément qui a déclenché l'action.
         </div>
-
+ 
     </div>
 </div>
-
-
+ 
+ 
 <!-- ============================================================
      LEÇON 2 — LES ÉVÉNEMENTS
 ============================================================ -->
 <div class="lesson" id="lesson-2">
-
+ 
     <div class="lesson-head">
         <h3><span class="ch">CH 02</span> Les événements</h3>
         <span class="toggle">+</span>
     </div>
-
+ 
     <div class="lesson-body">
-
+ 
         <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
             Click, hover, keypress… jQuery unifie tous les événements avec
             <code>.on()</code> et ses raccourcis.
         </p>
-
+ 
         <!-- DÉMO 2a : click -->
         <div class="demo">
             <div class="demo-code">
@@ -317,7 +317,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-2a">Clique ici</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 2b : hover -->
         <div class="demo">
             <div class="demo-code">
@@ -333,7 +333,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <div class="demo-box" id="box-2b"></div>
             </div>
         </div>
-
+ 
         <!-- DÉMO 2c : keyup -->
         <div class="demo">
             <div class="demo-code">
@@ -350,28 +350,28 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <div class="demo-output" id="output-2c">[en attente]</div>
             </div>
         </div>
-
+ 
     </div>
 </div>
-
-
+ 
+ 
 <!-- ============================================================
      LEÇON 3 — LES EFFETS
 ============================================================ -->
 <div class="lesson" id="lesson-3">
-
+ 
     <div class="lesson-head">
         <h3><span class="ch">CH 03</span> Effets & animations</h3>
         <span class="toggle">+</span>
     </div>
-
+ 
     <div class="lesson-body">
-
+ 
         <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
             jQuery propose des animations prêtes à l'emploi :
             fadeIn, slideUp, animate, toggleClass…
         </p>
-
+ 
         <!-- DÉMO 3a : fadeToggle -->
         <div class="demo">
             <div class="demo-code">
@@ -385,7 +385,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-3a">▶ fadeToggle</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 3b : slideToggle -->
         <div class="demo">
             <div class="demo-code">
@@ -399,7 +399,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-3b">▶ slideToggle</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 3c : animate -->
         <div class="demo">
             <div class="demo-code">
@@ -418,33 +418,33 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn dark" id="btn-3c-reset">↺ Reset</button>
             </div>
         </div>
-
+ 
         <div class="tip">
             <strong>Astuce :</strong> Les durées sont en ms.
             <code>400</code> = par défaut, <code>"slow"</code> = 600ms, <code>"fast"</code> = 200ms.
         </div>
-
+ 
     </div>
 </div>
-
-
+ 
+ 
 <!-- ============================================================
      LEÇON 4 — LE DOM
 ============================================================ -->
 <div class="lesson" id="lesson-4">
-
+ 
     <div class="lesson-head">
         <h3><span class="ch">CH 04</span> Manipulation du DOM</h3>
         <span class="toggle">+</span>
     </div>
-
+ 
     <div class="lesson-body">
-
+ 
         <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
             <code>append()</code>, <code>remove()</code>, <code>html()</code>, <code>text()</code> :
             modifier la structure de la page à la volée.
         </p>
-
+ 
         <!-- DÉMO 4a : append -->
         <div class="demo">
             <div class="demo-code">
@@ -464,7 +464,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn dark" id="btn-4a-clear">↺ Vider</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 4b : .html() vs .text() -->
         <div class="demo">
             <div class="demo-code">
@@ -481,7 +481,7 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn dark" id="btn-4b-text">▶ .text()</button>
             </div>
         </div>
-
+ 
         <!-- DÉMO 4c : each + data -->
         <div class="demo">
             <div class="demo-code">
@@ -503,17 +503,17 @@ h1 { font-size: 42px; margin-bottom: 6px; }
                 <button class="run-btn" id="btn-4c">▶ Numéroter</button>
             </div>
         </div>
-
+ 
         <div class="tip">
             <strong>Le pattern .each() + data-*</strong> est la base des composants dynamiques.
             C'est exactement ce que fait la navbar : chaque li porte
             <code>data-page="..."</code> et jQuery le lit au clic.
         </div>
-
+ 
     </div>
 </div>
-
-
+ 
+ 
 <script>
 /* ============================================================
    SUIVI DE PROGRESSION
@@ -542,7 +542,7 @@ $(".toc-btn").on("click", function() {
  
     // Ton code ici ↓
     const target = $(this).data("target");
-    $(".toc-section").removeClass("open");
+    $(".lesson").removeClass("open");
     $("#" + target).addClass("open");  
  
     const offset = $("#" + target).offset()
@@ -596,9 +596,9 @@ $("#btn-1b").on("click", function() {
  
     // Ton code ici ↓
     $("#d1b-list .item").removeClass("highlight")
-    $(".item2").eq(1).addClass("highlight")
+    $("#d1b-list .item2").eq(1).addClass("highlight")
     setTimeout(() => {
-      $("#d1b-list .item2").removeClass("highlight");
+      $("#d1b-list .item").removeClass("highlight");  
     }, 1500);
 });
  
@@ -611,9 +611,9 @@ $("#btn-2a").on("click", function() {
     // setTimeout pour remettre "Clique ici" après 1200ms
  
     // Ton code ici ↓
-    $(this).text("Vous avez cliquez");
+    $(this).text("Vous avez cliqué");
     setTimeout(() => {
-          $(this).text("Cliqué ici");
+          $(this).text("Cliquez ici");
     }, 1200);
 });
  
@@ -654,8 +654,8 @@ $("#input-2c").on("keyup", function() {
         $("#output-2c").text($(this).val())
     }
 });
-
-
+ 
+ 
 /* ============================================================
    TODO F — Démo 3a : fadeToggle sur #box-3a
 ============================================================ */
@@ -712,37 +712,37 @@ $("#btn-4a-clear").on("click", function() {
     // Utiliser .html("<li>Item initial</li>")
     $("#d4a-list").html("<li>Item initial</li>")
     // Ton code ici ↓
-   
+ 
 });
-
-
+ 
+ 
 /* ============================================================
    TODO L — .html() : interpréter la balise <strong>
    TODO M — .text() : afficher la balise en clair
 ============================================================ */
 $("#btn-4b-html").on("click", function() {
-
+ 
     // Ton code ici ↓
 });
-
+ 
 $("#btn-4b-text").on("click", function() {
-
+ 
     // Ton code ici ↓
 });
-
-
+ 
+ 
 /* ============================================================
    TODO N — .each() + .data("nom")
    Numéroter chaque .produit avec son data-nom
    Bonus : .delay(i * 200) + .css pour l'effet de surbrillance
 ============================================================ */
 $("#btn-4c").on("click", function() {
-
+ 
     // Ton code ici ↓
 });
-
+ 
 </script>
-
+ 
 <!-- ============================================================
      FOOTER PIXELBAOBAB
 ============================================================ -->
@@ -774,6 +774,6 @@ $("#btn-4c").on("click", function() {
     >PixelBaobab</a>
     &nbsp;&middot;&nbsp; jQuery Academy &nbsp;&middot;&nbsp; 2026
 </footer>
-
+ 
 </body>
 </html>

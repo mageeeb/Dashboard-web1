@@ -38,24 +38,6 @@ body.dark {
     color: #eee;
 }
 
-body.dark header {
-    background-color: #111;
-}
-
-body.dark .header-btns button {
-    background: transparent !important;
-    color: white !important;
-    border-color: white !important;
-}
-
-body.dark .sidebar {
-    background-color: #1a1a1a;
-}
-
-body.dark main {
-    background-color: #222;
-}
-
 body.dark .header {
     background-color: #333;
 }
@@ -80,16 +62,6 @@ body.dark .menu {
     background-color: #333;
 }
 
-body.dark .fakePage {
-    background-color: #2e2e2e;
-    color: #eee;
-}
-
-body.dark .statBox {
-    background-color: #2e2e2e;
-    color: #eee;
-}
-
 
 .menu {
     display: none;
@@ -109,7 +81,7 @@ ul li {
 }
 
 .carte button {
-    position: relative;
+    position: relative; 
     padding: 12px 20px;
     margin-right: 8px;
     border: 1px solid #ccc;
@@ -123,10 +95,7 @@ ul li {
     border: 2px solid blue;
 }
 
-#box1,
-#box2,
-#box3,
-#box4 {
+#box1, #box2, #box3, #box4 {
     display: inline-block;
     width: 100px;
     height: 100px;
@@ -139,29 +108,19 @@ ul li {
     margin-top: 30px;
 }
 
-#box1 {
-    background-color: red;
-}
+#box1 { background-color: red; }
+#box2 { background-color: blue; }
+#box3 { background-color: green; }
+#box4 { background-color: violet; }
 
-#box2 {
-    background-color: blue;
-}
+.clear { clear: both; }
 
-#box3 {
-    background-color: green;
-}
-
-#box4 {
-    background-color: violet;
-}
-
-.clear {
-    clear: both;
-}
 
 #galerie {
     overflow: visible;
+    min-height: 350px;
 }
+
 
 #notification {
     display: none;
@@ -177,6 +136,7 @@ ul li {
     margin-top: 15px;
 }
 
+
 #formulaire {
     margin-bottom: 10px;
     margin-top: 5px;
@@ -190,18 +150,14 @@ ul li {
     min-height: 60px;
 }
 
+
 button {
     cursor: pointer;
 }
 
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .spinning {
