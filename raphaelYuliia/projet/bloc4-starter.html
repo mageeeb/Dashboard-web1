@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 4 — Cours jQuery Interactif</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+/* ============================================================
+   BASE — fourni, ne pas modifier
+============================================================ */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: #f4efe6; padding: 40px; }
+
+h1 { font-size: 42px; margin-bottom: 6px; }
+.page-sub {
+    font-family: monospace;
+    font-size: 12px;
+    color: #7a7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+}
+
+/* Sommaire */
+.toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 32px;
+    padding: 16px;
+    background: white;
+    border: 2px solid #1a1a1a;
+}
+.toc-btn {
+    padding: 6px 14px;
+    background: #f4efe6;
+    border: 1px solid #1a1a1a;
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.toc-btn:hover { background: #ff4d2e; color: white; border-color: #ff4d2e; }
+
+/* Leçon accordéon */
+.lesson {
+    background: white;
+    border: 2px solid #1a1a1a;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+.lesson-head {
+    padding: 18px 24px;
+    background: #1a1a1a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+}
+.lesson-head h3 { font-size: 20px; display: flex; align-items: baseline; gap: 12px; }
+.lesson-head .ch {
+    font-family: monospace;
+    font-size: 11px;
+    color: #ff4d2e;
+    letter-spacing: 0.1em;
+}
+.lesson-head .toggle {
+    font-size: 24px;
+    font-weight: bold;
+    transition: transform 0.3s;
+    font-family: monospace;
+}
+.lesson.open .lesson-head .toggle { transform: rotate(45deg); }
+
+/* Corps de la leçon — CACHÉ par défaut */
+.lesson-body { display: none; padding: 28px; }
+
+/* Bloc démo : code à gauche, résultat à droite */
+.demo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 2px solid #1a1a1a;
+    margin: 20px 0;
+}
+.demo-code {
+    background: #1a1a1a;
+    color: white;
+    padding: 20px;
+    font-family: monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    overflow-x: auto;
+}
+.demo-code .tag {
+    display: block;
+    color: #ff8c69;
+    font-size: 10px;
+    margin-bottom: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+.demo-code .kw  { color: #ff8c69; }
+.demo-code .str { color: #a3e635; }
+.demo-code .com { color: #6b7280; font-style: italic; }
+
+.demo-result {
+    background: #f4efe6;
+    border-left: 2px solid #1a1a1a;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.demo-result .tag {
+    color: #7a7268;
+    font-family: monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+/* Boutons de démo */
+.run-btn {
+    align-self: flex-start;
+    padding: 10px 18px;
+    background: #ff4d2e;
+    color: white;
+    border: none;
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+.run-btn:hover { transform: translateY(-2px); }
+.run-btn.dark  { background: #1a1a1a; }
+
+/* Éléments de démo réutilisables */
+.demo-box {
+    width: 90px; height: 90px;
+    background: #ff4d2e;
+    border: 2px solid #1a1a1a;
+}
+.demo-list { list-style: none; width: 100%; }
+.demo-list li {
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #1a1a1a;
+    margin-bottom: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    transition: background 0.3s, transform 0.3s;
+}
+.demo-list li.highlight {
+    background: #ffd23f;
+    transform: translateX(8px);
+}
+.demo-input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #1a1a1a;
+    font-family: monospace;
+    font-size: 14px;
+    background: white;
+    outline: none;
+}
+.demo-output {
+    width: 100%;
+    padding: 12px;
+    background: #1a1a1a;
+    color: white;
+    font-family: monospace;
+    font-size: 13px;
+    min-height: 44px;
+}
+
+/* Astuce */
+.tip {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: #ffd23f;
+    border-left: 4px solid #1a1a1a;
+    font-size: 14px;
+    line-height: 1.6;
+}
+.tip strong { font-style: italic; }
+
+/* Compteur de leçons ouvertes */
+#progress-counter {
+    margin-bottom: 28px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #7a7268;
+    padding: 10px 14px;
+    background: white;
+    border: 1px solid #1a1a1a;
+    display: inline-block;
+}
+</style>
+</head>
+<body>
+
+<h1>Cours jQuery</h1>
+<div class="page-sub">4 chapitres — Démos interactives — Clique pour tester</div>
+
+<!-- Compteur de progression -->
+<div id="progress-counter">0 / 4 chapitres ouverts</div>
+
+<!-- Sommaire -->
+<div class="toc">
+    <button class="toc-btn" data-target="lesson-1">01. Sélecteurs</button>
+    <button class="toc-btn" data-target="lesson-2">02. Événements</button>
+    <button class="toc-btn" data-target="lesson-3">03. Effets</button>
+    <button class="toc-btn" data-target="lesson-4">04. DOM</button>
+</div>
+
+
+<!-- ============================================================
+     LEÇON 1 — LES SÉLECTEURS
+============================================================ -->
+<div class="lesson" id="lesson-1">
+
+    <div class="lesson-head">
+        <h3><span class="ch">CH 01</span> Les sélecteurs</h3>
+        <span class="toggle">+</span>
+    </div>
+
+    <div class="lesson-body">
+
+        <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
+            jQuery permet de cibler des éléments du DOM avec la même syntaxe que CSS.
+            Tout passe par <code>$()</code>.
+        </p>
+
+        <!-- DÉMO 1a : sélection par classe -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// Sélection par classe</span>
+<span class="kw">$</span>(<span class="str">".item"</span>).<span class="kw">css</span>(<span class="str">"background"</span>, <span class="str">"#ffd23f"</span>);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Résultat — tous les .item</span>
+                <ul class="demo-list" id="d1a-list">
+                    <li class="item">Item A</li>
+                    <li class="item">Item B</li>
+                    <li class="item">Item C</li>
+                </ul>
+                <!-- TODO A — connecter ce bouton à la démo -->
+                <button class="run-btn" id="btn-1a">▶ Exécuter</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 1b : :eq() -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// :eq(index) — un seul élément</span>
+<span class="kw">$</span>(<span class="str">".item2"</span>).<span class="kw">eq</span>(<span class="str">1</span>).<span class="kw">addClass</span>(<span class="str">"highlight"</span>);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Résultat — seulement le 2e</span>
+                <ul class="demo-list" id="d1b-list">
+                    <li class="item2">Premier</li>
+                    <li class="item2">Deuxième</li>
+                    <li class="item2">Troisième</li>
+                </ul>
+                <!-- TODO B — connecter ce bouton -->
+                <button class="run-btn" id="btn-1b">▶ Exécuter</button>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>À retenir :</strong> <code>$(this)</code> dans un événement
+            représente l'élément qui a déclenché l'action.
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ============================================================
+     LEÇON 2 — LES ÉVÉNEMENTS
+============================================================ -->
+<div class="lesson" id="lesson-2">
+
+    <div class="lesson-head">
+        <h3><span class="ch">CH 02</span> Les événements</h3>
+        <span class="toggle">+</span>
+    </div>
+
+    <div class="lesson-body">
+
+        <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
+            Click, hover, keypress… jQuery unifie tous les événements avec
+            <code>.on()</code> et ses raccourcis.
+        </p>
+
+        <!-- DÉMO 2a : click -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .click()</span>
+<span class="kw">$</span>(<span class="str">"#btn"</span>).<span class="kw">click</span>(<span class="kw">function</span>() {
+  <span class="kw">$</span>(<span class="kw">this</span>).<span class="kw">text</span>(<span class="str">"Cliqué !"</span>);
+});
+            </div>
+            <div class="demo-result">
+                <span class="tag">Clique sur le bouton</span>
+                <!-- TODO C — ce bouton doit changer son propre texte au clic -->
+                <button class="run-btn" id="btn-2a">Clique ici</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 2b : hover -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .hover(entrer, sortir)</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="kw">hover</span>(
+  <span class="kw">function</span>() { <span class="com">/* survol → vert */</span> },
+  <span class="kw">function</span>() { <span class="com">/* sortie → rouge */</span> }
+);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Survole le carré</span>
+                <!-- TODO D — survol → vert #1aa179, sortie → rouge #ff4d2e -->
+                <div class="demo-box" id="box-2b"></div>
+            </div>
+        </div>
+
+        <!-- DÉMO 2c : keyup -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .on("keyup") — frappe clavier</span>
+<span class="kw">$</span>(<span class="str">"#input"</span>).<span class="kw">on</span>(<span class="str">"keyup"</span>, <span class="kw">function</span>() {
+  <span class="kw">$</span>(<span class="str">"#output"</span>).<span class="kw">text</span>(<span class="kw">$</span>(<span class="kw">this</span>).<span class="kw">val</span>());
+});
+            </div>
+            <div class="demo-result">
+                <span class="tag">Tape quelque chose</span>
+                <!-- TODO E — connecter input → output en temps réel -->
+                <input type="text" class="demo-input" id="input-2c"
+                       placeholder="Tape ici...">
+                <div class="demo-output" id="output-2c">[en attente]</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ============================================================
+     LEÇON 3 — LES EFFETS
+============================================================ -->
+<div class="lesson" id="lesson-3">
+
+    <div class="lesson-head">
+        <h3><span class="ch">CH 03</span> Effets & animations</h3>
+        <span class="toggle">+</span>
+    </div>
+
+    <div class="lesson-body">
+
+        <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
+            jQuery propose des animations prêtes à l'emploi :
+            fadeIn, slideUp, animate, toggleClass…
+        </p>
+
+        <!-- DÉMO 3a : fadeToggle -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .fadeToggle(600)</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="kw">fadeToggle</span>(<span class="str">600</span>);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Disparaît / réapparaît</span>
+                <div class="demo-box" id="box-3a" style="background:#2d5fff"></div>
+                <!-- TODO F — fadeToggle sur #box-3a au clic -->
+                <button class="run-btn" id="btn-3a">▶ fadeToggle</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 3b : slideToggle -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .slideToggle(500)</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="kw">slideToggle</span>(<span class="str">500</span>);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Se déplie / replie</span>
+                <div class="demo-box" id="box-3b" style="background:#1aa179"></div>
+                <!-- TODO G — slideToggle sur #box-3b au clic -->
+                <button class="run-btn" id="btn-3b">▶ slideToggle</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 3c : animate -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .animate() custom</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="kw">animate</span>({
+  <span class="str">"margin-left"</span>: <span class="str">"180px"</span>,
+  <span class="str">"opacity"</span>: <span class="str">0.4</span>
+}, <span class="str">1000</span>);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Se déplace vers la droite</span>
+                <div class="demo-box" id="box-3c" style="position:relative;left:0"></div>
+                <!-- TODO H — animate déplace #box-3c à droite -->
+                <button class="run-btn" id="btn-3c">▶ Animer</button>
+                <!-- TODO I — reset : ramener à gauche -->
+                <button class="run-btn dark" id="btn-3c-reset">↺ Reset</button>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>Astuce :</strong> Les durées sont en ms.
+            <code>400</code> = par défaut, <code>"slow"</code> = 600ms, <code>"fast"</code> = 200ms.
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ============================================================
+     LEÇON 4 — LE DOM
+============================================================ -->
+<div class="lesson" id="lesson-4">
+
+    <div class="lesson-head">
+        <h3><span class="ch">CH 04</span> Manipulation du DOM</h3>
+        <span class="toggle">+</span>
+    </div>
+
+    <div class="lesson-body">
+
+        <p style="font-size:17px;font-style:italic;margin-bottom:20px;line-height:1.5">
+            <code>append()</code>, <code>remove()</code>, <code>html()</code>, <code>text()</code> :
+            modifier la structure de la page à la volée.
+        </p>
+
+        <!-- DÉMO 4a : append -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .append() — ajoute à la fin</span>
+<span class="kw">$</span>(<span class="str">"#list"</span>).<span class="kw">append</span>(
+  <span class="str">"&lt;li&gt;Nouvel item&lt;/li&gt;"</span>
+);
+            </div>
+            <div class="demo-result">
+                <span class="tag">Ajout dynamique</span>
+                <ul class="demo-list" id="d4a-list">
+                    <li>Item initial</li>
+                </ul>
+                <!-- TODO J — append un nouvel item à chaque clic -->
+                <button class="run-btn" id="btn-4a">▶ Append</button>
+                <!-- TODO K — vider la liste et remettre "Item initial" -->
+                <button class="run-btn dark" id="btn-4a-clear">↺ Vider</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 4b : .html() vs .text() -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .html() interprète les balises</span>
+<span class="kw">$</span>(<span class="str">"#out"</span>).<span class="kw">html</span>(<span class="str">"&lt;strong&gt;Gras !&lt;/strong&gt;"</span>);
+<span class="com">// .text() affiche les balises en clair</span>
+            </div>
+            <div class="demo-result">
+                <span class="tag">html() vs text()</span>
+                <div class="demo-output" id="d4b-output">--</div>
+                <!-- TODO L — .html() met du contenu avec balise strong -->
+                <button class="run-btn" id="btn-4b-html">▶ .html()</button>
+                <!-- TODO M — .text() affiche la balise en clair -->
+                <button class="run-btn dark" id="btn-4b-text">▶ .text()</button>
+            </div>
+        </div>
+
+        <!-- DÉMO 4c : each + data -->
+        <div class="demo">
+            <div class="demo-code">
+                <span class="tag">// .each() + .data()</span>
+<span class="kw">$</span>(<span class="str">".produit"</span>).<span class="kw">each</span>(<span class="kw">function</span>(<span class="kw">i</span>) {
+  <span class="kw">$</span>(<span class="kw">this</span>).<span class="kw">text</span>(
+    (i+1) + <span class="str">". "</span> + <span class="kw">$</span>(<span class="kw">this</span>).<span class="kw">data</span>(<span class="str">"nom"</span>)
+  );
+});
+            </div>
+            <div class="demo-result">
+                <span class="tag">Lit data-nom et numérote</span>
+                <ul class="demo-list" id="d4c-list">
+                    <li class="produit" data-nom="Croissant">--</li>
+                    <li class="produit" data-nom="Pain au chocolat">--</li>
+                    <li class="produit" data-nom="Éclair café">--</li>
+                </ul>
+                <!-- TODO N — .each() lit data-nom sur chaque .produit -->
+                <button class="run-btn" id="btn-4c">▶ Numéroter</button>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>Le pattern .each() + data-*</strong> est la base des composants dynamiques.
+            C'est exactement ce que fait la navbar : chaque li porte
+            <code>data-page="..."</code> et jQuery le lit au clic.
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+/* ============================================================
+   SUIVI DE PROGRESSION
+   Appelé chaque fois qu'une leçon est ouverte/fermée
+============================================================ */
+function updateProgress() {
+    const total   = $(".lesson").length;
+    const opened  = $(".lesson.open").length;
+    $("#progress-counter").text(opened + " / " + total + " chapitres ouverts");
+}
+
+
+/* ============================================================
+   TODO 1 — Sommaire (boutons .toc-btn)
+   ─────────────────────────────────────
+   Au clic sur un .toc-btn :
+     → Lire data-target avec $(this).data("target")
+     → Fermer TOUTES les leçons : .removeClass("open")
+     → Ouvrir la bonne leçon : $("#" + target).addClass("open")
+     → Scroller vers elle avec $("html, body").animate({ scrollTop: ... }, 500)
+       Utiliser $("#" + target).offset().top - 80 comme valeur
+     → Appeler updateProgress()
+============================================================ */
+
+$(".toc-btn").on("click", function() {
+    let target=$(this).data("target");
+    const pos = $('#' + target).offset().top
+    
+    $('.lesson').removeClass("open");
+    $("#" + target).addClass("open");
+    $("html, body").animate({ scrollTop: pos - 80 }, 500)
+    updateProgress();
+
+});
+
+
+/* ============================================================
+   TODO 2 — Accordéon (clic sur .lesson-head)
+   ──────────────────────────────────────────
+   Au clic sur un .lesson-head :
+     → Utiliser $(this).closest(".lesson") pour remonter à la leçon parente
+     → .toggleClass("open") pour l'ouvrir ou la fermer
+     → Le CSS gère l'affichage du corps et la rotation du +
+     → Appeler updateProgress()
+============================================================ */
+
+$(".lesson-head").on("click", function() {
+
+    $(this).closest(".lesson").toggleClass("open toggle")
+    $(this).closest(".lesson").css("display","block");
+    
+    updateProgress();
+
+});
+
+$("#lesson-1").on("click", function() {
+
+    
+    $(".lesson-body").eq(0).css("display","block");
+
+});
+$("#lesson-2").on("click", function() {
+
+    
+    $(".lesson-body").eq(1).css("display","block");
+
+});
+$("#lesson-3").on("click", function() {
+
+    
+    $(".lesson-body").eq(2).css("display","block");
+
+});
+$("#lesson-4").on("click", function() {
+
+    
+    $(".lesson-body").eq(3).css("display","block");
+
+});
+/* ============================================================
+   TODO A — Démo 1a : colorier tous les .item
+============================================================ */
+$("#btn-1a").on("click", function() {
+    // $("#d1a-list .item").css(...)
+    // Puis setTimeout pour reset après 1500ms
+
+    $("#d1a-list .item").css("background",("#ffd23f"))
+    setTimeout(()=>{
+        $("#d1a-list .item").css("background",(""))
+    },1500)
+});
+
+
+/* ============================================================
+   TODO B — Démo 1b : .eq(1).addClass("highlight")
+============================================================ */
+$("#btn-1b").on("click", function() {
+    // Retirer "highlight" de tous d'abord, puis ajouter sur .eq(1)
+    // setTimeout pour reset
+
+   $("#d1b-list .item2").removeClass("highlight");
+   $("#d1b-list .item2").eq(1).addClass("highlight")
+    setTimeout(()=>{
+        $("#d1b-list .item2").removeClass("highlight");
+    },1500)
+});
+
+
+/* ============================================================
+   TODO C — Démo 2a : le bouton change son propre texte
+============================================================ */
+$("#btn-2a").on("click", function() {
+    // $(this).text(...)
+    // setTimeout pour remettre "Clique ici" après 1200ms
+
+   $(this).text("Cliqué !")
+   setTimeout(()=>{
+        $(this).text("CLIQUE ICI");
+    },1200)
+});
+
+
+/* ============================================================
+   TODO D — Démo 2b : hover sur #box-2b
+============================================================ */
+// .hover(function entrer, function sortir)
+// entrer → .css("background", "#1aa179")
+// sortir → .css("background", "#ff4d2e")
+
+$("#box-2b").hover( function() { $(this).css("background", "#1aa179") }, function() { $(this).css("background", "#ff4d2e") } );
+
+
+/* ============================================================
+   TODO E — Démo 2c : keyup sur #input-2c → #output-2c
+============================================================ */
+// .on("keyup", function(){ ... })
+// Penser à tester si la valeur est vide → afficher "[en attente]"
+
+$("#input-2c").on("keyup", function() { 
+    let val = $(this).val();
+
+    if(val.length === 0){
+        $("#output-2c").text("[en attente]");
+    } else {
+        $("#output-2c").text($(this).val()); 
+    }
+});
+
+
+/* ============================================================
+   TODO F — Démo 3a : fadeToggle sur #box-3a
+============================================================ */
+$("#btn-3a").on("click", function() {
+    $("#box-3a").fadeToggle(600);
+});
+
+
+/* ============================================================
+   TODO G — Démo 3b : slideToggle sur #box-3b
+============================================================ */
+$("#btn-3b").on("click", function() {
+     $("#box-3b").fadeToggle(500);
+});
+
+
+/* ============================================================
+   TODO H — Démo 3c : animate vers la droite
+   TODO I — Reset : animate vers la gauche (margin-left: "0px", opacity: 1)
+============================================================ */
+$("#btn-3c").on("click", function() {
+    $("#box-3c").animate({marginLeft:'180px',opacity:0.4},1000)
+});
+
+$("#btn-3c-reset").on("click", function() {
+        $("#box-3c").animate({marginLeft:'0px',opacity:1},600)
+});
+
+
+/* ============================================================
+   TODO J — Démo 4a : append un nouvel item
+   (compter les items existants pour numéroter)
+============================================================ */
+let appendCount = 1;
+$("#btn-4a").on("click", function() {
+    appendCount++;
+    $("#d4a-list").append( "<li>Nouvel item</li>" );
+});
+
+/* ============================================================
+   TODO K — Vider la liste et remettre l'état initial
+============================================================ */
+$("#btn-4a-clear").on("click", function() {
+    appendCount = 1;
+    // Utiliser .html("<li>Item initial</li>")
+    $("#d4a-list").html( "<li>Item initial</li>" );
+    // Ton code ici ↓
+});
+
+
+/* ============================================================
+   TODO L — .html() : interpréter la balise <strong>
+   TODO M — .text() : afficher la balise en clair
+============================================================ */
+$("#btn-4b-html").on("click", function() {
+
+$("#d4b-output").html("<strong>Gras !</strong>");
+});
+
+$("#btn-4b-text").on("click", function() {
+
+   $("#d4b-output").text("<strong>Pas Gras !</strong>");
+});
+
+
+/* ============================================================
+   TODO N — .each() + .data("nom")
+   Numéroter chaque .produit avec son data-nom
+   Bonus : .delay(i * 200) + .css pour l'effet de surbrillance
+============================================================ */
+$("#btn-4c").on("click", function() {
+ $(".produit").each(function(i) {
+     $(this).delay(i*200).queue(function(next){
+        
+        $(this).css('background','#ffd23f').text( (i+1) + ". " + $(this).data("nom") );
+        next();
+    });
+    });
+    
+});
+
+</script>
+
+<!-- ============================================================
+     FOOTER PIXELBAOBAB
+============================================================ -->
+<footer style="
+    margin-top: 40px;
+    padding: 18px 30px;
+    background: #1a1a1a;
+    color: rgba(255,250,240,0.5);
+    text-align: center;
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-top: 3px solid #ff4d2e;
+">
+    D&#233;velopp&#233; par&nbsp;
+    <a href="https://www.pixelbaobab.com"
+       target="_blank"
+       rel="noopener"
+       style="
+           color: #ff4d2e;
+           text-decoration: none;
+           font-weight: bold;
+           letter-spacing: 0.15em;
+           transition: opacity 0.2s;
+       "
+       onmouseover="this.style.opacity='0.7'"
+       onmouseout="this.style.opacity='1'"
+    >PixelBaobab</a>
+    &nbsp;&middot;&nbsp; jQuery Academy &nbsp;&middot;&nbsp; 2026
+</footer>
+
+</body>
+</html>
