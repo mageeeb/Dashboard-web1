@@ -281,7 +281,6 @@ const visitedPages = new Set(["homePage"]); // Home visitée par défaut
      → Retirer "activeNav" de tous les .navLink
      → Ajouter "activeNav" sur $(this)
 
-
    ÉTAPE B — Récupérer l'ID de la page à afficher
      → Utiliser $(this).data("page") pour lire data-page="..."
 
@@ -306,36 +305,21 @@ const visitedPages = new Set(["homePage"]); // Home visitée par défaut
 $(".navLink").on("click", function() {
 
     // Ton code ici ↓
-        /*Active le lien*/
-      $(".navLink").removeClass("activeNav");
-      $(this).addClass("activeNav");
+    $(".navLink").removeClass("activeNav");
+        $(this).addClass("activeNav");
 
-      /*Récupère la page*/
-       let page = $(this).data("page");
+        const page = $(this).data("page");
 
-      /*Cache toutes les pages*/
-      $(".page").removeClass("activePage").hide();
+        $(".page").hide().removeClass("activePage");
 
-      /*Affiche la page cliquée*/
-        $("#" + page)
-          .fadeIn(400)
+        $("#" + page).fadeIn(400).addClass("activePage");
 
-          .addClass("activePage");
+        const label = $(this).text().trim();
+        $("#toast").text("Navigation → " + label).show().delay(1800).fadeOut(400);
 
-        // 1. Récupérer le nom de la page (titre de l'onglet) 
-    // 2. Injecter le texte et afficher le toast
-        $('#toast')
-        .text(`Page actuelle : ${page}`)
-        .fadeIn(400)                     // Affiche le toast en fondu
-        .delay(1800)                    // Patiente 3 secondes
-        .fadeOut(400);                  // Masque le toast en fondu
-
-        //Ajouter l'ID de la page dans visitedPages (Set)
         visitedPages.add(page);
-        //Calculer le % : visitedPages.size / 5 * 100
-        let pct = visitedPages.size / 5 * 100;
-       //Animer #progressFill avec .animate({width: pct+"%"}, 400)
-       $('#progressFill').animate({width: pct+"%"}, 400);
+        const pct = visitedPages.size / 5 * 100;
+        $("#progressFill").animate({ width: pct + "%" }, 400);
 });
 
 
@@ -354,12 +338,7 @@ $(".navLink").on("click", function() {
 $("#toggleMenu").on("click", function() {
 
     // Ton code ici ↓
-    $("#sidebar").animate(
-       {
-        width: "toggle",
-       }, 
-       500, 
-    );
+    $("#sidebar").animate({ width: "toggle" }, 400);
 });
 
 </script>

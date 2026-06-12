@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -293,6 +294,7 @@ h1 {
 
 
 <script>
+
 /* ============================================================
    TODO 1 — Horloge : afficher l'heure actuelle dans #clock
    ──────────────────────────────────────────────────────────
@@ -305,15 +307,22 @@ h1 {
 ============================================================ */
 
 // Ton code ici ↓
-function updateClock(){
-        var dateActuelle = new Date();
-        var heureActuelle = dateActuelle.toLocaleTimeString({ hour:"2-digit", minute:"2-digit" });
-        $("#clock").text(heureActuelle);
-}
-updateClock();
+$(function() {
 
-// 2. Mise à jour toutes les 1000 millisecondes (1 seconde)
-setInterval(updateClock, 1000);
+    function updateClock() {
+        let now = new Date();
+        let time = now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
+        $("#clock")
+        
+        .text(time);
+    }
+
+    updateClock(); // appel initial
+
+    // Ton code ici ↓
+    setInterval(updateClock, 60000);
+
+});
 
 /* ============================================================
    TODO 2 — Compteurs animés avec $().animate()
@@ -342,16 +351,20 @@ $(".counter").each(function() {
     // Ton code ici ↓
     let target = $(this).data("target");
     let $el = $(this);
-        $({ n: 0 }).animate({ n: target }, {
-               duration: 1500,
-               easing: "swing",
-               step: function() {
-                   $el.text( Math.floor(this.n).toLocaleString("fr-FR") );
-               },
-               complete: function() {
-                   $el.text( target.toLocaleString("fr-FR") );
-               }
-           });
+
+
+
+    $({ n: 0 }).animate({ n: target }, {
+        duration: 1500,
+        easing: "swing",
+        step: function() {
+            $el.text( Math.floor(this.n).toLocaleString("fr-FR") );
+        },
+        complete: function() {
+            $el.text( target.toLocaleString("fr-FR") );
+        }
+    });
+
 });
 
 
@@ -371,16 +384,10 @@ $("#barChart .bar").each(function(i) {
 
     // Ton code ici ↓
     let h = $(this).data("h");
-    //h.delay(i * 100);
-
-    $(this).delay(i * 100)
-    .animate({ height: h + "%" }, 700);
+    $(this).delay(i * 100).animate({ height: h + "%" }, 700);
 
 });
-/* let h = $(this).data("h");
-    //h.delay(i * 100);
-    $(this).animate({ height: h + "%" }, 700);
-    */
+
 
 /* ============================================================
    TODO 4 — Flux d'activité : apparition progressive
@@ -401,7 +408,16 @@ function animateFeed() {
     $(".feed-item").each(function(i) {
 
         // Ton code ici ↓
-        (".feed-item").delay(i * 200);
+        $(this).delay(i * 200).animate(
+            { opacity: 1 },
+            {
+                duration: 400,
+                step: function(now) {
+                    $(this).css("transform", "translateX(" + ((1-now)*-12) + "px)");
+                }
+            }
+        );
+
     });
 }
 
@@ -420,6 +436,12 @@ animateFeed(); // appel initial
 $("#refreshFeed").on("click", function() {
 
     // Ton code ici ↓
+    let $btn = $(this);
+
+    $btn.addClass("spinning");
+
+    setTimeout(() => $btn.removeClass("spinning"), 600);
+    setTimeout(animateFeed, 300);
 
 });
 
