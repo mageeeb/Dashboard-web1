@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BLOC 2 — Navbar & Navigation jQuery</title>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+/* ============================================================
+   BASE — fourni, ne pas modifier
+============================================================ */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Arial, sans-serif; background: #f4efe6; }
+
+/* Header */
+.app-header {
+    background: #1a1a1a;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #ff4d2e;
+}
+.app-header h1 { font-size: 20px; letter-spacing: 0.05em; }
+
+.menu-btn {
+    padding: 8px 18px;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    font-family: monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.menu-btn:hover { background: #ff4d2e; border-color: #ff4d2e; }
+
+/* Layout */
+.container { display: flex; min-height: calc(100vh - 67px); }
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    background: #222;
+    color: white;
+    padding: 28px 16px;
+    flex-shrink: 0;
+}
+.sidebar h3 {
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #7a7268;
+    margin-bottom: 16px;
+}
+.sidebar ul { list-style: none; }
+
+.navLink {
+    padding: 14px 16px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid transparent;
+    transition: all 0.25s;
+}
+.navLink:hover { background: #333; transform: translateX(4px); }
+.navLink.activeNav { background: #ff4d2e; border-color: #ff4d2e; font-weight: bold; }
+
+/* Barre de progression sidebar */
+.progress-section {
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+.progress-section .label {
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+.progress-track {
+    height: 6px;
+    background: #444;
+}
+.progress-fill {
+    height: 100%;
+    background: #ff4d2e;
+    width: 0%;
+    transition: width 0.5s;
+}
+
+/* Main */
+main { flex: 1; padding: 40px; }
+
+/* Pages */
+.page { display: none; }
+.activePage { display: block; }
+
+.page-content {
+    background: white;
+    border: 2px solid #1a1a1a;
+    padding: 40px;
+}
+.page-content h2 { font-size: 40px; margin-bottom: 8px; }
+.page-content .num {
+    font-family: monospace;
+    font-size: 11px;
+    color: #7a7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+}
+.page-content p { color: #7a7268; margin-top: 12px; line-height: 1.6; }
+
+/* Badge page active */
+.badge {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 6px 14px;
+    background: #1a1a1a;
+    color: white;
+    font-family: monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Notification toast */
+#toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #1a1a1a;
+    color: white;
+    padding: 14px 20px;
+    font-family: monospace;
+    font-size: 13px;
+    border-left: 4px solid #ff4d2e;
+    display: none;
+    z-index: 999;
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+============================================================ -->
+<header class="app-header">
+    <h1>jQuery Academy — Dashboard</h1>
+    <button class="menu-btn" id="toggleMenu">☰ Menu</button>
+</header>
+
+
+<div class="container">
+
+    <!-- ============================================================
+         SIDEBAR
+    ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+
+        <h3>Navigation</h3>
+
+        <ul>
+            <!-- data-page relie chaque lien à une section -->
+            <li class="navLink activeNav" data-page="homePage">
+                🏠 Home
+            </li>
+            <li class="navLink" data-page="dashboardPage">
+                📊 Dashboard
+            </li>
+            <li class="navLink" data-page="coursePage">
+                📚 Cours jQuery
+            </li>
+            <li class="navLink" data-page="profilePage">
+                👤 Profil
+            </li>
+            <li class="navLink" data-page="settingsPage">
+                ⚙️ Paramètres
+            </li>
+        </ul>
+
+        <!-- Barre de progression (bonus) -->
+        <div class="progress-section">
+            <div class="label">Pages visitées</div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- ============================================================
+         CONTENU PRINCIPAL
+    ============================================================ -->
+    <main>
+
+        <!-- Home -->
+        <section id="homePage" class="page activePage">
+            <div class="page-content">
+                <div class="num">01 — Page active</div>
+                <h2>🏠 Home</h2>
+                <p>Bienvenue sur le dashboard ! Utilise la sidebar pour naviguer.</p>
+                <div class="badge">Page actuelle : Home</div>
+            </div>
+        </section>
+
+        <!-- Dashboard -->
+        <section id="dashboardPage" class="page">
+            <div class="page-content">
+                <div class="num">02 — Page active</div>
+                <h2>📊 Dashboard</h2>
+                <p>Contenu du tableau de bord.</p>
+                <div class="badge">Page actuelle : Dashboard</div>
+            </div>
+        </section>
+
+        <!-- Cours -->
+        <section id="coursePage" class="page">
+            <div class="page-content">
+                <div class="num">03 — Page active</div>
+                <h2>📚 Cours jQuery</h2>
+                <p>Le cours interactif jQuery.</p>
+                <div class="badge">Page actuelle : Cours jQuery</div>
+            </div>
+        </section>
+
+        <!-- Profil -->
+        <section id="profilePage" class="page">
+            <div class="page-content">
+                <div class="num">04 — Page active</div>
+                <h2>👤 Profil</h2>
+                <p>Informations du compte.</p>
+                <div class="badge">Page actuelle : Profil</div>
+            </div>
+        </section>
+
+        <!-- Paramètres -->
+        <section id="settingsPage" class="page">
+            <div class="page-content">
+                <div class="num">05 — Page active</div>
+                <h2>⚙️ Paramètres</h2>
+                <p>Configuration de l'application.</p>
+                <div class="badge">Page actuelle : Paramètres</div>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<!-- Toast notification -->
+<div id="toast"></div>
+
+
+<script>
+/* ============================================================
+   SUIVI des pages visitées (utilisé pour la barre de progression)
+============================================================ */
+const visitedPages = new Set(["homePage"]); // Home visitée par défaut
+
+
+/* ============================================================
+   TODO 1 — Navigation par clic sur .navLink
+   ─────────────────────────────────────────
+   Quand on clique sur un lien de la sidebar :
+
+   ÉTAPE A — Gérer l'état actif du lien cliqué
+     → Retirer "activeNav" de tous les .navLink
+     → Ajouter "activeNav" sur $(this)
+
+
+   ÉTAPE B — Récupérer l'ID de la page à afficher
+     → Utiliser $(this).data("page") pour lire data-page="..."
+
+   ÉTAPE C — Cacher toutes les sections .page
+     → Utiliser .hide() (ou .removeClass("activePage"))
+
+   ÉTAPE D — Afficher la bonne section
+     → Sélectionner avec $("#" + page)
+     → Utiliser .fadeIn(400) pour l'animation
+     → Ajouter la classe "activePage"
+
+   ÉTAPE E — Afficher un toast de notification
+     → Mettre le nom de la page dans #toast
+     → .show() puis .delay(1800).fadeOut(400)
+
+   BONUS — Mettre à jour la barre de progression
+     → Ajouter l'ID de la page dans visitedPages (Set)
+     → Calculer le % : visitedPages.size / 5 * 100
+     → Animer #progressFill avec .animate({width: pct+"%"}, 400)
+============================================================ */
+
+$(".navLink").on("click", function() {
+
+    // Ton code ici ↓
+        /*Active le lien*/
+      $(".navLink").removeClass("activeNav");
+      $(this).addClass("activeNav");
+
+      /*Récupère la page*/
+       let page = $(this).data("page");
+
+      /*Cache toutes les pages*/
+      $(".page").removeClass("activePage").hide();
+
+      /*Affiche la page cliquée*/
+        $("#" + page)
+          .fadeIn(400)
+
+          .addClass("activePage");
+
+        // 1. Récupérer le nom de la page (titre de l'onglet) 
+    // 2. Injecter le texte et afficher le toast
+        $('#toast')
+        .text(`Page actuelle : ${page}`)
+        .fadeIn(400)                     // Affiche le toast en fondu
+        .delay(1800)                    // Patiente 3 secondes
+        .fadeOut(400);                  // Masque le toast en fondu
+
+        //Ajouter l'ID de la page dans visitedPages (Set)
+        visitedPages.add(page);
+        //Calculer le % : visitedPages.size / 5 * 100
+        let pct = visitedPages.size / 5 * 100;
+       //Animer #progressFill avec .animate({width: pct+"%"}, 400)
+       $('#progressFill').animate({width: pct+"%"}, 400);
+});
+
+
+/* ============================================================
+   TODO 2 — Bouton ☰ Menu : afficher/cacher la sidebar
+   ─────────────────────────────────────────────────────
+   Au clic sur #toggleMenu :
+     → Utiliser .animate({ width: "toggle" }, 400) sur #sidebar
+     Ou alternativement :
+     → Tester si la sidebar est visible avec .is(":visible")
+     → Si visible → .slideUp() / si cachée → .slideDown()
+     (Note : avec display:flex sur .container, préférer
+      animate width ou toggleClass avec overflow:hidden)
+============================================================ */
+
+$("#toggleMenu").on("click", function() {
+
+    // Ton code ici ↓
+    $("#sidebar").animate(
+       {
+        width: "toggle",
+       }, 
+       500, 
+    );
+});
+
+</script>
+
+<!-- ============================================================
+     FOOTER PIXELBAOBAB
+============================================================ -->
+<footer style="
+    margin-top: 40px;
+    padding: 18px 30px;
+    background: #1a1a1a;
+    color: rgba(255,250,240,0.5);
+    text-align: center;
+    font-family: monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-top: 3px solid #ff4d2e;
+">
+    D&#233;velopp&#233; par&nbsp;
+    <a href="https://www.pixelbaobab.com"
+       target="_blank"
+       rel="noopener"
+       style="
+           color: #ff4d2e;
+           text-decoration: none;
+           font-weight: bold;
+           letter-spacing: 0.15em;
+           transition: opacity 0.2s;
+       "
+       onmouseover="this.style.opacity='0.7'"
+       onmouseout="this.style.opacity='1'"
+    >PixelBaobab</a>
+    &nbsp;&middot;&nbsp; jQuery Academy &nbsp;&middot;&nbsp; 2026
+</footer>
+
+</body>
+</html>
