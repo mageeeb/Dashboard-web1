@@ -312,9 +312,7 @@ $(function() {
     function updateClock() {
         let now = new Date();
         let time = now.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" });
-        $("#clock")
-        
-        .text(time);
+        $("#clock").text(time);
     }
 
     updateClock(); // appel initial
