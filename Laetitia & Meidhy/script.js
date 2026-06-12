@@ -1,39 +1,42 @@
-/* =========================
+        /* =========================
             NAVBAR CLIQUABLE
         ========================= */
 
 $(".navLink").click(function () {
-  /*
+            /* ======================
                 Active le lien
-            */
+            ======================= */
 
   $(".navLink").removeClass("activeNav");
 
   $(this).addClass("activeNav");
 
-  /*
+              /* ===================
                 Récupère la page
-            */
+              ====================== */
 
   let page = $(this).data("page");
 
-  /*
+            /* ==========================
                 Cache toutes les pages
-            */
+            ============================ */
 
   $(".page").removeClass("activePage").hide();
 
-  /*
+            /* ============================
                 Affiche la page cliquée
-            */
+            ============================= */
 
   $("#" + page)
     .fadeIn(500)
-
     .addClass("activePage");
+
+  if (page === "profilePage") {
+    $("#profilePage").css("display", "flex");
+  }
 });
 
-/* =========================
+        /* =========================
                 TOGGLE MENU
         ========================= */
 
@@ -41,7 +44,7 @@ $("#toggleMenu").click(function () {
   $(".sidebar").slideToggle(300);
 });
 
-/* =========================
+        /* =========================
                 COUNTERS ANIMÉS
         ========================= */
 
@@ -71,7 +74,7 @@ $(".counter").each(function () {
   );
 });
 
-/* =========================
+        /* =========================
             HOME DYNAMIQUE
         ========================= */
 
@@ -122,7 +125,7 @@ setInterval(function () {
     );
 }, 2000);
 
-/* =========================
+        /* =========================
                 Dashboard 
         ========================= */
 $(document).ready(function () {
@@ -222,99 +225,215 @@ $(document).ready(function () {
     $("#messageAttr").removeAttr("disabled");
   });
 
-  /* =========================
+            /* =========================
             FORMULAIRE REGEX (page Profil)
             ========================= */
 
-  const regexUsername = /^[a-zA-Z0-9_-]{3,16}$/;
-  const regexEmail = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-  const regexPassword =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#+=&$^*.(){}_?!'"\-])\S{8,}$/;
+  let registeredUser = null;
 
-  function validerChamp(valeur, regex, idErreur, messageErreur) {
-    if (regex.test(valeur.trim())) {
-      $("#" + idErreur)
-        .text("")
-        .hide();
-      return true;
+  const REGEX = {
+    username: /^[a-zA-Z0-9_-]{3,16}$/,
+    email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/,
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>\/?\\|`~]).{8,}$/,
+  };
+
+  $(".tab").on("click", function () {
+    $(".tab").removeClass("active");
+    $(this).addClass("active");
+    let form = $(this).data("form");
+    $("#signupForm, #loginForm").hide();
+    $("#" + form).fadeIn(300);
+    $(".flash").slideUp(200);
+  });
+
+  $("#signup-username").on("keyup", function () {
+    let valeur = $(this).val();
+    let field = $("#f-username");
+
+    field.removeClass("ok error");
+
+    if (valeur.length === 0) {
+      field.find(".hint").text("3 à 16 caractères : lettres, chiffres, _ ou -");
+    } else if (REGEX.username.test(valeur)) {
+      field.addClass("ok");
+      field.find(".hint").text("Nom valide");
     } else {
-      $("#" + idErreur)
-        .text(messageErreur)
-        .show();
-      return false;
+      field.addClass("error");
+      if (valeur.length < 3) {
+        field.find(".hint").text("Trop court, (3 caractères minimum)");
+      } else if (valeur.length > 16) {
+        field.find(".hint").text("Trop long, (16 caractères maximum)");
+      } else {
+        field.find(".hint").text("Caractères interdits - lettres/chiffres/_/- uniquement");
+      }
     }
+  });
+
+  $("#signup-email").on("keyup", function () {
+    let valeur = $(this).val();
+    let field = $("#f-email");
+    let result = REGEX.email.test(valeur);
+
+    field.removeClass("ok error");
+    if (result === true) {
+      field.find(".hint").text("Email valide");
+      field.addClass("ok");
+    } else {
+      field.find(".hint").text("Format invalide - Ex : prenom@domaine.com");
+      field.addClass("error");
+    }
+    if (valeur.length === 0) {
+      field.removeClass("ok error");
+      field.find(".hint").text("Format email standard requis");
+    }
+  });
+
+  $("#signup-password").on("keyup", function () {
+    let valeur = $(this).val();
+
+    const min = /[a-z]/;
+    const maj = /[A-Z]/;
+    const numb = /[0-9]/;
+    const cara = /[^a-zA-Z0-9]/;
+
+    let goal = 0;
+
+    if (valeur.length >= 8) goal += 1;
+    if (min.test(valeur) && maj.test(valeur)) goal += 1;
+    if (numb.test(valeur)) goal += 1;
+    if (cara.test(valeur)) goal += 1;
+
+    $(".strength span").each(function (i) {
+      $(this).removeClass("faible moyen fort");
+      if (i < goal) {
+        if (goal <= 1) {
+          $(this).addClass("faible");
+        } else if (goal <= 3) {
+          $(this).addClass("moyen");
+        } else {
+          $(this).addClass("fort");
+        }
+      }
+    });
+
+    $("#f-password").removeClass("ok error");
+    if (REGEX.password.test(valeur)) {
+      $("#f-password").addClass("ok");
+      $("#f-password .hint").text("Mot de passe valide");
+    } else {
+      $("#f-password").addClass("error");
+    }
+  });
+
+  $("#signupBtn").on("click", function () {
+    const username = $("#signup-username").val().trim();
+    const email = $("#signup-email").val().trim();
+    const password = $("#signup-password").val();
+
+    const errors = [];
+
+    if (!REGEX.username.test(username)) errors.push("Nom d'utilisateur invalide.");
+    if (!REGEX.email.test(email)) errors.push("Adresse mail invalide.");
+    if (!REGEX.password.test(password)) errors.push("Mot de passe invalide.");
+
+    if (errors.length > 0) {
+      $(this).addClass("shake");
+      setTimeout(() => {
+        $(this).removeClass("shake");
+      }, 600);
+
+      $("#signupFlash")
+        .removeClass("ok")
+        .addClass("err")
+        .html(errors.join("<br>"))
+        .hide()
+        .slideDown(300);
+    } else {
+      registeredUser = { username, email, password };
+
+      $("#signupFlash")
+        .removeClass("err")
+        .addClass("ok")
+        .text("Votre inscription est validée, Connexion en cours")
+        .hide()
+        .slideDown(300);
+      setTimeout(() => {
+        doLogin();
+      }, 800);
+    }
+  });
+
+  $("#loginBtn").on("click", function () {
+    const email = $("#login-email").val().trim();
+    const password = $("#login-password").val();
+    const errors = [];
+
+    if (!registeredUser) {
+      $("#loginFlash")
+        .removeClass("ok")
+        .addClass("err")
+        .text("Aucun compte trouvé, inscris-toi d'abord.")
+        .hide()
+        .slideDown(300);
+      return;
+    }
+
+    if (!REGEX.email.test(email)) errors.push("Adresse mail invalide.");
+
+    if (errors.length > 0) {
+      $(this).addClass("shake");
+      setTimeout(() => $(this).removeClass("shake"), 600);
+      $("#loginFlash")
+        .removeClass("ok")
+        .addClass("err")
+        .html(errors.join("<br>"))
+        .hide()
+        .slideDown(300);
+      return;
+    }
+
+    if (email === registeredUser.email && password === registeredUser.password) {
+      $("#loginFlash")
+        .removeClass("err")
+        .addClass("ok")
+        .text("Connexion en cours...")
+        .hide()
+        .slideDown(300);
+      setTimeout(() => doLogin(), 800);
+    } else {
+      $(this).addClass("shake");
+      setTimeout(() => $(this).removeClass("shake"), 600);
+      $("#loginFlash")
+        .removeClass("ok")
+        .addClass("err")
+        .text("Email ou mot de passe incorrect.")
+        .hide()
+        .slideDown(300);
+    }
+  });
+
+  /* ============================================================
+     CONNEXION / DÉCONNEXION — logique fournie, ne pas modifier
+  ============================================================ */
+
+  function doLogin() {
+    $("#authBox").fadeOut(400, function () {
+      const msg =
+        "Bienvenue <strong>" +
+        registeredUser.username +
+        "</strong> ! Tu es connecté·e.";
+      $("#profileWelcomeMsg").html(msg);
+      $("#profileWelcome").fadeIn(400);
+    });
   }
 
-  // Afficher/Masquer le mot de passe
-  $("#togglePassword").click(function () {
-    const input = $("#inputPassword");
-    const isHidden = input.attr("type") === "password";
-    input.attr("type", isHidden ? "text" : "password");
-    $("#iconEyeOpen").toggle(isHidden);
-    $("#iconEyeClosed").toggle(!isHidden);
+  $("#logoutBtn").on("click", function () {
+    $("#profileWelcome").fadeOut(400, function () {
+      $("#login-email, #login-password").val("");
+      $(".flash").hide();
+      $(".tab").first().trigger("click"); // reset sur l'onglet inscription
+      $("#authBox").fadeIn(400);
+    });
   });
 
-  // Validation en temps réel
-  $("#inputUsername").on("input", function () {
-    validerChamp(
-      $(this).val(),
-      regexUsername,
-      "errUsername",
-      "⚠️ Username invalide (3-16 caractères : lettres, chiffres, _ ou -)",
-    );
-  });
-  $("#inputEmail").on("input", function () {
-    validerChamp(
-      $(this).val(),
-      regexEmail,
-      "errEmail",
-      "⚠️ Email invalide (ex: jean@exemple.com)",
-    );
-  });
-  $("#inputPassword").on("input", function () {
-    validerChamp(
-      $(this).val(),
-      regexPassword,
-      "errPassword",
-      "⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)",
-    );
-  });
-
-  // Soumission
-  $("#btnSubmit").click(function () {
-    const okUser = validerChamp(
-      $("#inputUsername").val(),
-      regexUsername,
-      "errUsername",
-      "⚠️ Username invalide (3-16 caractères : lettres, chiffres, _ ou -)",
-    );
-    const okEmail = validerChamp(
-      $("#inputEmail").val(),
-      regexEmail,
-      "errEmail",
-      "⚠️ Email invalide (ex: jean@exemple.com)",
-    );
-    const okPass = validerChamp(
-      $("#inputPassword").val(),
-      regexPassword,
-      "errPassword",
-      "⚠️ Mot de passe invalide (8+ caractères, maj, min, chiffre, caractère spécial)",
-    );
-
-    if (okUser && okEmail && okPass) {
-      $("#formSuccess").slideDown(400, function () {
-        setTimeout(function () {
-          $("#formSuccess").slideUp(400);
-          $("#inputUsername, #inputEmail, #inputPassword").val("");
-        }, 3000);
-      });
-    }
-  });
-
-  // Réinitialisation
-  $("#btnReset").click(function () {
-    $("#inputUsername, #inputEmail, #inputPassword").val("");
-    $(".form-error").text("").hide();
-    $("#formSuccess").hide();
-  });
 });

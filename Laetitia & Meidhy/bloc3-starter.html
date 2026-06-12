@@ -96,7 +96,6 @@ h1 {
     position: relative;
     cursor: pointer;
     transition: opacity 0.2s;
-    /* IMPORTANT : la hauteur sera mise à 0% puis animée par jQuery */
     height: 0%;
 }
 .bar:nth-child(even)     { background: #ff4d2e; }
@@ -134,7 +133,6 @@ h1 {
     padding: 14px 0;
     border-bottom: 1px dashed rgba(26,26,26,0.2);
     font-size: 14px;
-    /* Sera animé au chargement */
     opacity: 0;
 }
 .feed-item:last-child { border: none; }
@@ -197,7 +195,6 @@ h1 {
 
     <div class="statBox">
         <div class="label">Utilisateurs</div>
-        <!-- data-target = la valeur cible du compteur -->
         <div class="num counter" data-target="2540">0</div>
         <div class="delta up">↑ 12.4%</div>
     </div>
@@ -232,7 +229,6 @@ h1 {
     <div class="section-sub">Volume de requêtes par jour — barres animées au chargement</div>
 
     <div class="bars" id="barChart">
-        <!-- data-h = hauteur en % de chaque barre -->
         <div class="bar" data-h="55"><span class="val">55</span></div>
         <div class="bar" data-h="72"><span class="val">72</span></div>
         <div class="bar" data-h="40"><span class="val">40</span></div>
@@ -303,18 +299,14 @@ h1 {
    - Appeler updateClock() une première fois immédiatement
    - Utiliser setInterval() pour rappeler toutes les 60 000ms
 ============================================================ */
-$(".navLink").on("click", function() {
 
-    // Ton code ici ↓
-    function updateClock() {
+function updateClock() {
     const heure = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-    $("#clock").text(heure);
+    $("#clock").text("⏱ Dernière mise à jour : " + heure);
 }
- 
+
 updateClock();
 setInterval(updateClock, 60000);
-
-});
 
 
 /* ============================================================
@@ -341,10 +333,9 @@ setInterval(updateClock, 60000);
 
 $(".counter").each(function() {
 
-    // Ton code ici ↓
     const target = $(this).data("target");
     const $el = $(this);
- 
+
     $({ n: 0 }).animate({ n: target }, {
         duration: 1500,
         easing: "swing",
@@ -372,12 +363,9 @@ $(".counter").each(function() {
 
 $("#barChart .bar").each(function(i) {
 
-    // Ton code ici ↓
-    $(this).data("h");
-    $(".bar").each(function(i) {
-        $(this).delay(i * 100);
-        $(this).animate({height: h + "%"}, 700);
-    });
+    const h = $(this).data("h");
+    $(this).delay(i * 100).animate({ height: h + "%" }, 700);
+
 });
 
 
@@ -395,16 +383,21 @@ $("#barChart .bar").each(function(i) {
 ============================================================ */
 
 function animateFeed() {
-    $(".feed-item").css({ opacity: 0 }); // reset
+    $(".feed-item").css({ opacity: 0 });
 
     $(".feed-item").each(function(i) {
 
-        // Ton code ici ↓
+        $(this).delay(i * 200).animate({ opacity: 1 }, {
+            duration: 400,
+            step: function(now) {
+                $(this).css("transform", "translateX(" + ((1 - now) * -12) + "px)");
+            }
+        });
 
     });
 }
 
-animateFeed(); // appel initial
+animateFeed();
 
 
 /* ============================================================
@@ -418,7 +411,9 @@ animateFeed(); // appel initial
 
 $("#refreshFeed").on("click", function() {
 
-    // Ton code ici ↓
+    $(this).addClass("spinning");
+    setTimeout(() => $(this).removeClass("spinning"), 600);
+    setTimeout(() => animateFeed(), 300);
 
 });
 

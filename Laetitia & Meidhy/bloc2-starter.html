@@ -49,6 +49,7 @@ body { font-family: Arial, sans-serif; background: #f4efe6; }
     color: white;
     padding: 28px 16px;
     flex-shrink: 0;
+    overflow: hidden;
 }
 .sidebar h3 {
     font-family: monospace;
@@ -173,7 +174,6 @@ main { flex: 1; padding: 40px; }
         <h3>Navigation</h3>
 
         <ul>
-            <!-- data-page relie chaque lien à une section -->
             <li class="navLink activeNav" data-page="homePage">
                 🏠 Home
             </li>
@@ -269,7 +269,7 @@ main { flex: 1; padding: 40px; }
 /* ============================================================
    SUIVI des pages visitées (utilisé pour la barre de progression)
 ============================================================ */
-const visitedPages = new Set(["homePage"]); // Home visitée par défaut
+const visitedPages = new Set(["homePage"]);
 
 
 /* ============================================================
@@ -304,8 +304,21 @@ const visitedPages = new Set(["homePage"]); // Home visitée par défaut
 
 $(".navLink").on("click", function() {
 
-    // Ton code ici ↓
-    
+    $(".navLink").removeClass("activeNav");
+    $(this).addClass("activeNav");
+
+    let page = $(this).data("page");
+
+    $(".page").hide().removeClass("activePage");
+
+    $("#" + page).fadeIn(400).addClass("activePage");
+
+    let label = $(this).text().trim();
+    $("#toast").text("📄 " + label).show().delay(1800).fadeOut(400);
+
+    visitedPages.add(page);
+    let pct = visitedPages.size / 5 * 100;
+    $("#progressFill").animate({ width: pct + "%" }, 400);
 });
 
 
@@ -323,8 +336,8 @@ $(".navLink").on("click", function() {
 
 $("#toggleMenu").on("click", function() {
 
-    // Ton code ici ↓
-    
+    $("#sidebar").animate({ width: "toggle" }, 400);
+
 });
 
 </script>
