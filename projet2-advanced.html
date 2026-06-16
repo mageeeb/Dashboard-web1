@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>jQuery Academy — Dashboard pédagogique</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+/* =========================================================
+   RESET & VARIABLES
+========================================================= */
+*{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+    --bg:#f4efe6;
+    --ink:#1a1a1a;
+    --paper:#fffaf0;
+    --accent:#ff4d2e;
+    --accent-2:#2d5fff;
+    --yellow:#ffd23f;
+    --green:#1aa179;
+    --muted:#7a7268;
+    --line:#1a1a1a;
+}
+
+html,body{height:100%}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    overflow-x:hidden;
+    background-image:
+        radial-gradient(circle at 20% 10%, rgba(255,77,46,0.06) 0, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(45,95,255,0.05) 0, transparent 50%);
+}
+
+/* Grain overlay */
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    pointer-events:none;
+    z-index:9999;
+    opacity:0.7;
+}
+
+h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:800;letter-spacing:-0.02em;line-height:1.05}
+code,kbd,.mono{font-family:'JetBrains Mono',monospace}
+
+/* =========================================================
+   LOGIN SCREEN
+========================================================= */
+#authScreen{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:var(--bg);
+    display:flex;
+    align-items:stretch;
+}
+
+.auth-left{
+    flex:1;
+    background:var(--ink);
+    color:var(--paper);
+    padding:60px 50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    position:relative;
+    overflow:hidden;
+}
+
+.auth-left::after{
+    content:"$";
+    position:absolute;
+    font-family:'Fraunces',serif;
+    font-size:42vw;
+    font-weight:900;
+    line-height:0.7;
+    color:var(--accent);
+    opacity:0.18;
+    bottom:-12vw;
+    right:-6vw;
+    pointer-events:none;
+    transform:rotate(-8deg);
+}
+
+.brand-mark{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+}
+
+.brand-dot{
+    width:14px;height:14px;border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 0 4px rgba(255,77,46,0.25);
+    animation:pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse{
+    50%{box-shadow:0 0 0 10px rgba(255,77,46,0)}
+}
+
+.auth-left h1{
+    font-size:clamp(48px,7vw,96px);
+    font-weight:900;
+    font-style:italic;
+}
+.auth-left h1 em{
+    font-style:normal;
+    color:var(--accent);
+    font-weight:400;
+}
+.auth-left .tag{
+    margin-top:30px;
+    max-width:380px;
+    font-size:16px;
+    line-height:1.6;
+    color:rgba(255,250,240,0.7);
+}
+
+.auth-foot{
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;letter-spacing:0.1em;
+    color:rgba(255,250,240,0.4);
+    text-transform:uppercase;
+    z-index:2;
+}
+
+.auth-right{
+    flex:1;
+    padding:60px 50px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    max-width:560px;
+}
+
+.tabs{
+    display:flex;
+    gap:0;
+    margin-bottom:40px;
+    border-bottom:2px solid var(--ink);
+}
+.tab{
+    padding:14px 0;
+    margin-right:32px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    cursor:pointer;
+    position:relative;
+    color:var(--muted);
+    background:none;border:none;
+}
+.tab.active{color:var(--ink);font-weight:700}
+.tab.active::after{
+    content:"";
+    position:absolute;
+    bottom:-2px;left:0;right:0;
+    height:4px;background:var(--accent);
+}
+
+.auth-form h2{
+    font-size:34px;
+    margin-bottom:8px;
+}
+.auth-form p.sub{
+    color:var(--muted);
+    margin-bottom:30px;
+    font-size:14px;
+}
+
+.field{
+    margin-bottom:22px;
+}
+.field label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:8px;
+    color:var(--ink);
+}
+.field input{
+    width:100%;
+    padding:14px 0;
+    border:none;
+    border-bottom:2px solid var(--ink);
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    color:var(--ink);
+    outline:none;
+    transition:border-color 0.25s;
+}
+.field input:focus{border-bottom-color:var(--accent)}
+.field .hint{
+    margin-top:6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    min-height:14px;
+}
+.field.error input{border-bottom-color:var(--accent)}
+.field.error .hint{color:var(--accent);font-weight:500}
+.field.ok input{border-bottom-color:var(--green)}
+.field.ok .hint{color:var(--green);font-weight:500}
+.field.ok .hint::before{content:"✓ "}
+
+.submit-btn{
+    margin-top:14px;
+    width:100%;
+    padding:18px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    cursor:pointer;
+    transition:transform 0.2s, background 0.2s;
+    position:relative;
+    overflow:hidden;
+}
+.submit-btn:hover{background:var(--accent);transform:translateY(-2px)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn.shake{animation:shake 0.4s}
+@keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-8px)}
+    75%{transform:translateX(8px)}
+}
+
+.flash{
+    margin-top:18px;
+    padding:12px 16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    border-left:4px solid;
+    display:none;
+}
+.flash.ok{background:rgba(26,161,121,0.1);border-color:var(--green);color:var(--green)}
+.flash.err{background:rgba(255,77,46,0.1);border-color:var(--accent);color:var(--accent)}
+
+/* Password strength */
+.strength{
+    display:flex;gap:4px;margin-top:8px;
+}
+.strength span{
+    flex:1;height:4px;background:#dcd4c5;border-radius:2px;
+    transition:background 0.3s;
+}
+.strength span.on1{background:var(--accent)}
+.strength span.on2{background:var(--yellow)}
+.strength span.on3{background:var(--green)}
+
+/* =========================================================
+   APP SHELL
+========================================================= */
+#appShell{display:none}
+
+.app-header{
+    background:var(--ink);
+    color:var(--paper);
+    padding:18px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:3px solid var(--accent);
+}
+.app-header .brand-mark{color:var(--paper)}
+.user-pill{
+    display:flex;align-items:center;gap:12px;
+    background:rgba(255,250,240,0.08);
+    padding:6px 6px 6px 16px;
+    border-radius:30px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+}
+.user-pill .avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:white;font-size:13px;
+}
+.logout-btn{
+    background:none;border:1px solid var(--paper);
+    color:var(--paper);
+    padding:6px 14px;border-radius:30px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;text-transform:uppercase;letter-spacing:0.1em;
+    cursor:pointer;
+    transition:background 0.2s, color 0.2s;
+}
+.logout-btn:hover{background:var(--accent);border-color:var(--accent)}
+
+.container{display:flex;min-height:calc(100vh - 71px)}
+
+.sidebar{
+    width:260px;
+    background:var(--paper);
+    border-right:2px solid var(--ink);
+    padding:30px 20px;
+    position:sticky;
+    top:71px;
+    height:calc(100vh - 71px);
+}
+.sidebar h3{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    color:var(--muted);
+    margin-bottom:18px;
+    font-weight:500;
+}
+.navLink{
+    list-style:none;
+    padding:14px 18px;
+    margin-bottom:6px;
+    cursor:pointer;
+    border-radius:0;
+    font-size:15px;
+    font-weight:500;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    border:2px solid transparent;
+    transition:all 0.2s;
+    position:relative;
+}
+.navLink:hover{background:var(--bg);transform:translateX(4px)}
+.navLink.activeNav{
+    background:var(--ink);
+    color:var(--paper);
+    border-color:var(--ink);
+}
+.navLink.activeNav::after{
+    content:"→";
+    position:absolute;right:14px;
+    color:var(--accent);
+    font-weight:700;
+}
+.navLink .ico{
+    width:30px;height:30px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--bg);
+    border-radius:6px;
+    font-size:14px;
+}
+.navLink.activeNav .ico{background:rgba(255,250,240,0.1)}
+
+main{flex:1;padding:40px 50px;max-width:1200px}
+
+.page{display:none}
+.activePage{display:block;animation:pageIn 0.5s ease}
+@keyframes pageIn{
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* Page header */
+.page-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:40px;
+    padding-bottom:24px;
+    border-bottom:2px solid var(--ink);
+}
+.page-head .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--muted);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+}
+.page-head h2{font-size:54px;margin-top:6px}
+.page-head h2 em{font-style:italic;color:var(--accent);font-weight:400}
+.page-head .meta{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    text-align:right;
+    line-height:1.6;
+}
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:0;
+    margin-bottom:40px;
+    border:2px solid var(--ink);
+    background:var(--ink);
+}
+.statBox{
+    background:var(--paper);
+    padding:28px 24px;
+    position:relative;
+}
+.statBox .label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--muted);
+}
+.statBox h3{
+    font-size:52px;
+    font-family:'Fraunces',serif;
+    font-weight:800;
+    margin:8px 0 6px;
+    font-style:italic;
+}
+.statBox .delta{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+}
+.statBox .delta.up{color:var(--green)}
+.statBox .delta.down{color:var(--accent)}
+.statBox .spark{
+    position:absolute;
+    bottom:0;left:0;right:0;height:32px;
+    background:linear-gradient(180deg, transparent, rgba(255,77,46,0.08));
+}
+
+.dash-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:24px;
+    margin-bottom:32px;
+}
+
+.card{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:28px;
+}
+.card h4{
+    font-size:22px;
+    margin-bottom:6px;
+}
+.card .sub{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin-bottom:20px;
+}
+
+/* Bar chart */
+.bars{
+    display:flex;
+    align-items:flex-end;
+    gap:12px;
+    height:200px;
+    padding-top:20px;
+    border-bottom:2px solid var(--ink);
+}
+.bar{
+    flex:1;
+    background:var(--ink);
+    position:relative;
+    transition:background 0.2s;
+    cursor:pointer;
+    min-height:8px;
+}
+.bar:nth-child(even){background:var(--accent)}
+.bar:hover{transform:scaleY(1.05);transform-origin:bottom}
+.bar .val{
+    position:absolute;
+    top:-22px;left:50%;transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--ink);
+}
+.bars-labels{
+    display:flex;gap:12px;margin-top:8px;
+}
+.bars-labels span{
+    flex:1;text-align:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:0.05em;
+}
+
+/* Activity feed */
+.feed-item{
+    display:flex;
+    gap:14px;
+    padding:14px 0;
+    border-bottom:1px dashed rgba(26,26,26,0.2);
+    font-size:14px;
+    opacity:0;
+    transform:translateX(-10px);
+}
+.feed-item:last-child{border:none}
+.feed-item .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:var(--accent-2);
+    margin-top:6px;flex-shrink:0;
+}
+.feed-item .when{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--muted);
+    display:block;margin-top:2px;
+}
+
+/* Progress rings */
+.rings{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+}
+.ring-box{
+    text-align:center;
+    padding:20px 10px;
+}
+.ring-box svg{transform:rotate(-90deg)}
+.ring-box .label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    margin-top:8px;
+}
+.ring-box .pct{
+    font-family:'Fraunces',serif;
+    font-size:24px;
+    font-weight:800;
+}
+
+/* =========================================================
+   COURSE PAGE
+========================================================= */
+.toc{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:32px;
+    padding:16px;
+    background:var(--paper);
+    border:2px solid var(--ink);
+}
+.toc-link{
+    padding:6px 14px;
+    background:var(--bg);
+    border:1px solid var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    cursor:pointer;
+    transition:all 0.2s;
+}
+.toc-link:hover{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+
+.lesson{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    margin-bottom:24px;
+    overflow:hidden;
+}
+.lesson-head{
+    padding:20px 28px;
+    background:var(--ink);
+    color:var(--paper);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+}
+.lesson-head h3{
+    font-size:22px;
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+}
+.lesson-head .ch{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--accent);
+    letter-spacing:0.1em;
+}
+.lesson-head .toggle{
+    font-family:'JetBrains Mono',monospace;
+    font-size:18px;
+    transition:transform 0.3s;
+}
+.lesson.open .lesson-head .toggle{transform:rotate(45deg)}
+
+.lesson-body{
+    display:none;
+    padding:28px;
+}
+.lesson.open .lesson-body{display:block}
+
+.lesson-body p.intro{
+    font-family:'Fraunces',serif;
+    font-size:18px;
+    font-style:italic;
+    line-height:1.5;
+    margin-bottom:20px;
+    color:var(--ink);
+}
+
+.demo{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    border:2px solid var(--ink);
+    margin:20px 0;
+}
+.demo-code,.demo-result{padding:20px}
+.demo-code{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    line-height:1.7;
+    overflow-x:auto;
+}
+.demo-code .tag{
+    display:block;
+    color:var(--accent);
+    font-size:10px;
+    margin-bottom:10px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+}
+.demo-code .kw{color:#ff8c69}
+.demo-code .str{color:#a3e635}
+.demo-code .com{color:#6b7280;font-style:italic}
+.demo-code .fn{color:#fcd34d}
+.demo-result{
+    background:var(--bg);
+    border-left:2px solid var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+}
+.demo-result .tag{
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+}
+.try-btn{
+    padding:10px 18px;
+    background:var(--accent);
+    color:white;
+    border:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    cursor:pointer;
+    transition:transform 0.2s;
+}
+.try-btn:hover{transform:translateY(-2px)}
+.try-btn:active{transform:translateY(0)}
+
+/* Demo-specific styling */
+.demo-box{
+    width:100px;height:100px;
+    background:var(--accent);
+    border:2px solid var(--ink);
+}
+.demo-fade-box{background:var(--accent-2)}
+.demo-slide-box{background:var(--green)}
+.demo-toggle-box{background:var(--yellow);color:var(--ink)}
+.demo-list{list-style:none;width:100%}
+.demo-list li{
+    padding:8px 12px;
+    background:var(--paper);
+    border:1px solid var(--ink);
+    margin-bottom:4px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+}
+.demo-list li.highlight{
+    background:var(--yellow);
+    transform:translateX(8px);
+}
+.demo-input{
+    padding:10px;
+    border:2px solid var(--ink);
+    font-family:'JetBrains Mono',monospace;
+    width:100%;
+    background:var(--paper);
+}
+.demo-output{
+    width:100%;
+    padding:12px;
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    min-height:44px;
+    border:2px solid var(--ink);
+}
+.tip{
+    margin-top:16px;
+    padding:14px 18px;
+    background:var(--yellow);
+    border-left:4px solid var(--ink);
+    font-size:14px;
+}
+.tip strong{font-family:'Fraunces',serif;font-style:italic}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+.profile-grid{
+    display:grid;
+    grid-template-columns:1fr 2fr;
+    gap:24px;
+}
+.profile-card{
+    background:var(--paper);
+    border:2px solid var(--ink);
+    padding:32px;
+    text-align:center;
+}
+.big-avatar{
+    width:120px;height:120px;
+    border-radius:50%;
+    background:var(--accent);
+    color:white;
+    font-family:'Fraunces',serif;
+    font-weight:800;
+    font-size:48px;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 20px;
+    border:3px solid var(--ink);
+}
+.profile-card h3{font-size:28px}
+.profile-card .email{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--muted);
+    margin-top:6px;
+}
+.profile-card .badge{
+    display:inline-block;
+    margin-top:16px;
+    padding:6px 14px;
+    background:var(--green);
+    color:white;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+}
+.info-card .row{
+    display:flex;
+    justify-content:space-between;
+    padding:16px 0;
+    border-bottom:1px dashed rgba(26,26,26,0.2);
+}
+.info-card .row:last-child{border:none}
+.info-card .row .k{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--muted);
+}
+.info-card .row .v{font-weight:600}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+.setting-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 0;
+    border-bottom:1px dashed rgba(26,26,26,0.2);
+}
+.setting-row:last-child{border:none}
+.setting-row .name{font-weight:600;font-size:15px}
+.setting-row .desc{
+    font-size:13px;color:var(--muted);
+    margin-top:4px;
+}
+.toggle-switch{
+    width:50px;height:26px;
+    background:#dcd4c5;
+    border-radius:30px;
+    position:relative;cursor:pointer;
+    transition:background 0.3s;
+}
+.toggle-switch.on{background:var(--green)}
+.toggle-switch::after{
+    content:"";
+    position:absolute;
+    width:20px;height:20px;border-radius:50%;
+    background:white;top:3px;left:3px;
+    transition:left 0.3s;
+}
+.toggle-switch.on::after{left:27px}
+
+/* Responsive */
+@media(max-width:900px){
+    #authScreen{flex-direction:column}
+    .auth-left{padding:30px;min-height:200px}
+    .auth-left h1{font-size:42px}
+    .auth-left::after{font-size:80vw}
+    .container{flex-direction:column}
+    .sidebar{width:100%;position:relative;height:auto;top:0}
+    main{padding:24px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .dash-grid{grid-template-columns:1fr}
+    .demo{grid-template-columns:1fr}
+    .demo-result{border-left:none;border-top:2px solid var(--ink)}
+    .profile-grid{grid-template-columns:1fr}
+    .page-head h2{font-size:36px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     AUTH SCREEN
+============================================================ -->
+<section id="authScreen">
+
+    <div class="auth-left">
+
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <span>jQuery / Academy / 2026</span>
+        </div>
+
+        <div>
+            <h1>Code <em>en direct.</em><br>Apprends <em>en vrai.</em></h1>
+            <p class="tag">
+                Un dashboard pédagogique pour explorer jQuery
+                à travers des démos interactives. Crée ton compte
+                pour débloquer le cours et le tableau de bord.
+            </p>
+        </div>
+
+        <div class="auth-foot">
+            <span>EST. 2026</span>
+            <span>BRUXELLES</span>
+            <span>v1.0.0</span>
+        </div>
+
+    </div>
+
+    <div class="auth-right">
+
+        <div class="tabs">
+            <button class="tab active" data-form="signupForm">Inscription</button>
+            <button class="tab" data-form="loginForm">Connexion</button>
+        </div>
+
+        <!-- SIGNUP -->
+        <div class="auth-form" id="signupForm">
+            <h2>Crée ton accès</h2>
+            <p class="sub">L'inscription débloque toutes les pages du dashboard.</p>
+
+            <div class="field" id="f-username">
+                <label for="signup-username">Nom d'utilisateur</label>
+                <input type="text" id="signup-username" placeholder="ex: nanouchka_dev" autocomplete="off">
+                <div class="hint">3 à 16 caractères : lettres, chiffres, _ ou -</div>
+            </div>
+
+            <div class="field" id="f-email">
+                <label for="signup-email">Email</label>
+                <input type="email" id="signup-email" placeholder="prenom@domaine.com" autocomplete="off">
+                <div class="hint">Format email standard requis</div>
+            </div>
+
+            <div class="field" id="f-password">
+                <label for="signup-password">Mot de passe</label>
+                <input type="password" id="signup-password" placeholder="••••••••" autocomplete="off">
+                <div class="hint">8+ caractères, 1 majuscule, 1 chiffre, 1 spécial</div>
+                <div class="strength">
+                    <span></span><span></span><span></span><span></span>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="signupBtn">Créer le compte →</button>
+
+            <div class="flash" id="signupFlash"></div>
+        </div>
+
+        <!-- LOGIN -->
+        <div class="auth-form" id="loginForm" style="display:none">
+            <h2>Re-bonjour 👋</h2>
+            <p class="sub">Connecte-toi avec les identifiants que tu as créés.</p>
+
+            <div class="field" id="f-login-email">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" placeholder="prenom@domaine.com" autocomplete="off">
+                <div class="hint">&nbsp;</div>
+            </div>
+
+            <div class="field" id="f-login-password">
+                <label for="login-password">Mot de passe</label>
+                <input type="password" id="login-password" placeholder="••••••••" autocomplete="off">
+                <div class="hint">&nbsp;</div>
+            </div>
+
+            <button class="submit-btn" id="loginBtn">Se connecter →</button>
+
+            <div class="flash" id="loginFlash"></div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ============================================================
+     APP SHELL
+============================================================ -->
+<div id="appShell">
+
+    <header class="app-header">
+        <div class="brand-mark">
+            <span class="brand-dot"></span>
+            <span>jQuery Academy / Dashboard</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+            <div class="user-pill">
+                <span id="userName">user</span>
+                <span class="avatar" id="userAvatar">N</span>
+            </div>
+            <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <h3>Navigation</h3>
+
+            <ul style="list-style:none">
+                <li class="navLink activeNav" data-page="dashboardPage">
+                    <span class="ico">◉</span> Dashboard
+                </li>
+                <li class="navLink" data-page="coursePage">
+                    <span class="ico">§</span> Cours jQuery
+                </li>
+                <li class="navLink" data-page="profilePage">
+                    <span class="ico">◷</span> Profil
+                </li>
+                <li class="navLink" data-page="settingsPage">
+                    <span class="ico">⚙</span> Paramètres
+                </li>
+            </ul>
+
+            <div style="margin-top:40px;padding-top:24px;border-top:1px solid rgba(26,26,26,0.1)">
+                <h3>Progression</h3>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:8px">
+                    <span id="progLabel">0 / 8 chapitres</span>
+                </div>
+                <div style="height:6px;background:#dcd4c5">
+                    <div id="progBar" style="height:100%;background:var(--accent);width:0%;transition:width 0.5s"></div>
+                </div>
+            </div>
+
+        </aside>
+
+        <main>
+
+            <!-- ===================================
+                 DASHBOARD
+            =================================== -->
+            <section id="dashboardPage" class="page activePage">
+
+                <div class="page-head">
+                    <div>
+                        <div class="num">01 / Vue d'ensemble</div>
+                        <h2>Dashboard<em>.</em></h2>
+                    </div>
+                    <div class="meta">
+                        Mis à jour <span id="lastUpdate">--:--</span><br>
+                        Session active
+                    </div>
+                </div>
+
+                <!-- Stats -->
+                <div class="stats">
+                    <div class="statBox">
+                        <div class="label">Utilisateurs</div>
+                        <h3 class="counter" data-target="2540">0</h3>
+                        <div class="delta up">↑ 12.4%</div>
+                        <div class="spark"></div>
+                    </div>
+                    <div class="statBox">
+                        <div class="label">Sessions</div>
+                        <h3 class="counter" data-target="847">0</h3>
+                        <div class="delta up">↑ 4.7%</div>
+                        <div class="spark"></div>
+                    </div>
+                    <div class="statBox">
+                        <div class="label">Projets</div>
+                        <h3 class="counter" data-target="95">0</h3>
+                        <div class="delta down">↓ 2.1%</div>
+                        <div class="spark"></div>
+                    </div>
+                    <div class="statBox">
+                        <div class="label">Revenus €</div>
+                        <h3 class="counter" data-target="12780">0</h3>
+                        <div class="delta up">↑ 18.2%</div>
+                        <div class="spark"></div>
+                    </div>
+                </div>
+
+                <!-- Chart + Feed -->
+                <div class="dash-grid">
+
+                    <div class="card">
+                        <h4>Activité hebdomadaire</h4>
+                        <div class="sub">Volume de requêtes / jour</div>
+                        <div class="bars" id="barChart">
+                            <div class="bar" data-h="55"><span class="val">55</span></div>
+                            <div class="bar" data-h="72"><span class="val">72</span></div>
+                            <div class="bar" data-h="40"><span class="val">40</span></div>
+                            <div class="bar" data-h="88"><span class="val">88</span></div>
+                            <div class="bar" data-h="65"><span class="val">65</span></div>
+                            <div class="bar" data-h="92"><span class="val">92</span></div>
+                            <div class="bar" data-h="78"><span class="val">78</span></div>
+                        </div>
+                        <div class="bars-labels">
+                            <span>LUN</span><span>MAR</span><span>MER</span><span>JEU</span>
+                            <span>VEN</span><span>SAM</span><span>DIM</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>Flux en direct</h4>
+                        <div class="sub">Événements récents</div>
+                        <div id="liveFeed">
+                            <div class="feed-item">
+                                <div class="dot"></div>
+                                <div>
+                                    Nouvel utilisateur inscrit
+                                    <span class="when">il y a 2 min</span>
+                                </div>
+                            </div>
+                            <div class="feed-item">
+                                <div class="dot"></div>
+                                <div>
+                                    Mise à jour cours JS
+                                    <span class="when">il y a 8 min</span>
+                                </div>
+                            </div>
+                            <div class="feed-item">
+                                <div class="dot"></div>
+                                <div>
+                                    Quiz complété par 5 étudiants
+                                    <span class="when">il y a 14 min</span>
+                                </div>
+                            </div>
+                            <div class="feed-item">
+                                <div class="dot"></div>
+                                <div>
+                                    Démo jQuery vue 23 fois
+                                    <span class="when">il y a 32 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Rings -->
+                <div class="card">
+                    <h4>Objectifs du mois</h4>
+                    <div class="sub">Progression en %</div>
+                    <div class="rings">
+                        <div class="ring-box">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#dcd4c5" stroke-width="10"/>
+                                <circle class="ring" cx="60" cy="60" r="50" fill="none" stroke="var(--accent)" stroke-width="10"
+                                    stroke-dasharray="314" stroke-dashoffset="314" data-pct="78"/>
+                            </svg>
+                            <div class="pct ring-pct">0%</div>
+                            <div class="label">Inscriptions</div>
+                        </div>
+                        <div class="ring-box">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#dcd4c5" stroke-width="10"/>
+                                <circle class="ring" cx="60" cy="60" r="50" fill="none" stroke="var(--accent-2)" stroke-width="10"
+                                    stroke-dasharray="314" stroke-dashoffset="314" data-pct="62"/>
+                            </svg>
+                            <div class="pct ring-pct">0%</div>
+                            <div class="label">Engagement</div>
+                        </div>
+                        <div class="ring-box">
+                            <svg width="120" height="120">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#dcd4c5" stroke-width="10"/>
+                                <circle class="ring" cx="60" cy="60" r="50" fill="none" stroke="var(--green)" stroke-width="10"
+                                    stroke-dasharray="314" stroke-dashoffset="314" data-pct="91"/>
+                            </svg>
+                            <div class="pct ring-pct">0%</div>
+                            <div class="label">Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ===================================
+                 COURSE PAGE
+            =================================== -->
+            <section id="coursePage" class="page">
+
+                <div class="page-head">
+                    <div>
+                        <div class="num">02 / Apprentissage</div>
+                        <h2>Cours <em>jQuery</em></h2>
+                    </div>
+                    <div class="meta">
+                        8 chapitres<br>
+                        Démos interactives
+                    </div>
+                </div>
+
+                <div class="toc">
+                    <div class="toc-link" data-jump="lesson-1">01. Sélecteurs</div>
+                    <div class="toc-link" data-jump="lesson-2">02. Événements</div>
+                    <div class="toc-link" data-jump="lesson-3">03. CSS & classes</div>
+                    <div class="toc-link" data-jump="lesson-4">04. Effets</div>
+                    <div class="toc-link" data-jump="lesson-5">05. Animate</div>
+                    <div class="toc-link" data-jump="lesson-6">06. DOM</div>
+                    <div class="toc-link" data-jump="lesson-7">07. Chaining</div>
+                    <div class="toc-link" data-jump="lesson-8">08. Each & data</div>
+                </div>
+
+                <!-- ===== LESSON 1: SELECTEURS ===== -->
+                <div class="lesson open" id="lesson-1">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 01</span> Les sélecteurs</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            jQuery te permet de cibler des éléments du DOM avec la même syntaxe que CSS.
+                            Le tout passe par <code>$()</code> — la fonction phare de la bibliothèque.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// $(".classe") — par classe</span>
+<span class="kw">$</span>(<span class="str">".item"</span>).<span class="fn">css</span>(<span class="str">"background"</span>, <span class="str">"#ffd23f"</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Résultat</span>
+                                <ul class="demo-list" id="demo1-list">
+                                    <li class="item">Item 1</li>
+                                    <li class="item">Item 2</li>
+                                    <li class="item">Item 3</li>
+                                </ul>
+                                <button class="try-btn" data-demo="1">▶ Exécuter</button>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// :eq() — sélectionne par index</span>
+<span class="kw">$</span>(<span class="str">".item"</span>).<span class="fn">eq</span>(<span class="str">1</span>).<span class="fn">addClass</span>(<span class="str">"highlight"</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Résultat — seul le 2e item</span>
+                                <ul class="demo-list" id="demo1b-list">
+                                    <li class="item">Premier</li>
+                                    <li class="item">Deuxième</li>
+                                    <li class="item">Troisième</li>
+                                </ul>
+                                <button class="try-btn" data-demo="1b">▶ Exécuter</button>
+                            </div>
+                        </div>
+
+                        <div class="tip">
+                            <strong>À retenir :</strong> <code>$(this)</code> dans un événement représente
+                            l'élément qui a déclenché l'action. Indispensable pour cibler "celui sur lequel je viens de cliquer".
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 2: EVENEMENTS ===== -->
+                <div class="lesson" id="lesson-2">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 02</span> Les événements</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            Les événements connectent l'interface à la logique.
+                            Click, hover, keypress, submit… jQuery les unifie avec <code>.on()</code> et ses raccourcis.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .click() — réagit au clic</span>
+<span class="kw">$</span>(<span class="str">"#btn"</span>).<span class="fn">click</span>(<span class="kw">function</span>() {
+  <span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">text</span>(<span class="str">"Cliqué !"</span>);
+});
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Résultat — clique-moi</span>
+                                <button class="try-btn" id="demo2-btn">Clique ici</button>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .hover() — souris dessus / sortie</span>
+<span class="kw">$</span>(<span class="str">".box"</span>).<span class="fn">hover</span>(
+  <span class="kw">function</span>() { <span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">css</span>(<span class="str">"background"</span>, <span class="str">"#1aa179"</span>); },
+  <span class="kw">function</span>() { <span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">css</span>(<span class="str">"background"</span>, <span class="str">"#ff4d2e"</span>); }
+);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Survole le carré</span>
+                                <div class="demo-box" id="demo2-hover"></div>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .on("keyup") — frappe au clavier</span>
+<span class="kw">$</span>(<span class="str">"#in"</span>).<span class="fn">on</span>(<span class="str">"keyup"</span>, <span class="kw">function</span>() {
+  <span class="kw">$</span>(<span class="str">"#out"</span>).<span class="fn">text</span>(<span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">val</span>());
+});
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Tape, l'écho s'affiche</span>
+                                <input type="text" class="demo-input" id="demo2-input" placeholder="Tape quelque chose...">
+                                <div class="demo-output" id="demo2-output">[en attente...]</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 3: CSS & CLASSES ===== -->
+                <div class="lesson" id="lesson-3">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 03</span> CSS & classes</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            jQuery facilite la manipulation du style :
+                            <code>.css()</code>, <code>.addClass()</code>, <code>.removeClass()</code>, <code>.toggleClass()</code>.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .toggleClass() — ajoute ou retire</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="fn">toggleClass</span>(<span class="str">"highlight"</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Clique pour basculer</span>
+                                <div class="demo-box" id="demo3-box"></div>
+                                <button class="try-btn" data-demo="3">▶ Toggle highlight</button>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .css() avec un objet</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="fn">css</span>({
+  <span class="str">"background"</span>: <span class="str">"#2d5fff"</span>,
+  <span class="str">"transform"</span>: <span class="str">"rotate(15deg)"</span>,
+  <span class="str">"border-radius"</span>: <span class="str">"50%"</span>
+});
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Plusieurs propriétés d'un coup</span>
+                                <div class="demo-box" id="demo3b-box"></div>
+                                <button class="try-btn" data-demo="3b">▶ Appliquer</button>
+                                <button class="try-btn" data-demo="3b-reset" style="background:var(--ink)">↺ Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 4: EFFETS ===== -->
+                <div class="lesson" id="lesson-4">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 04</span> Effets fadeIn / slideUp / toggle</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            jQuery propose des animations prêtes à l'emploi :
+                            <code>.fadeIn()</code>, <code>.fadeOut()</code>, <code>.slideUp()</code>, <code>.slideDown()</code>,
+                            <code>.toggle()</code>.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .fadeToggle() — apparaît/disparaît</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="fn">fadeToggle</span>(<span class="str">600</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Animation d'opacité</span>
+                                <div class="demo-box demo-fade-box" id="demo4-fade"></div>
+                                <button class="try-btn" data-demo="4-fade">▶ fadeToggle</button>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .slideToggle() — déroule/replie</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="fn">slideToggle</span>(<span class="str">500</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Animation de hauteur</span>
+                                <div class="demo-box demo-slide-box" id="demo4-slide"></div>
+                                <button class="try-btn" data-demo="4-slide">▶ slideToggle</button>
+                            </div>
+                        </div>
+
+                        <div class="tip">
+                            <strong>Astuce :</strong> les durées s'expriment en millisecondes
+                            (<code>400</code> par défaut). Tu peux aussi passer <code>"slow"</code> ou <code>"fast"</code>.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 5: ANIMATE ===== -->
+                <div class="lesson" id="lesson-5">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 05</span> .animate() — animations custom</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            Pour des animations sur mesure, <code>.animate()</code> interpole
+                            n'importe quelle propriété CSS numérique.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .animate() — déplace en X</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>).<span class="fn">animate</span>({
+  <span class="str">"margin-left"</span>: <span class="str">"200px"</span>,
+  <span class="str">"opacity"</span>: <span class="str">0.5</span>
+}, <span class="str">1000</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Déplacement animé</span>
+                                <div class="demo-box" id="demo5-anim" style="position:relative;left:0"></div>
+                                <button class="try-btn" data-demo="5">▶ Animer</button>
+                                <button class="try-btn" data-demo="5-reset" style="background:var(--ink)">↺ Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 6: DOM ===== -->
+                <div class="lesson" id="lesson-6">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 06</span> Manipulation du DOM</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            <code>.append()</code>, <code>.prepend()</code>, <code>.remove()</code>, <code>.html()</code>, <code>.text()</code> :
+                            le toolkit pour modifier la structure de la page à la volée.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .append() — ajoute à la fin</span>
+<span class="kw">$</span>(<span class="str">"#list"</span>).<span class="fn">append</span>(
+  <span class="str">"&lt;li&gt;Nouvel item&lt;/li&gt;"</span>
+);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Ajout dynamique</span>
+                                <ul class="demo-list" id="demo6-list">
+                                    <li>Item initial</li>
+                                </ul>
+                                <button class="try-btn" data-demo="6-append">▶ Append</button>
+                                <button class="try-btn" data-demo="6-clear" style="background:var(--ink)">↺ Vider</button>
+                            </div>
+                        </div>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .html() vs .text()</span>
+<span class="kw">$</span>(<span class="str">"#out"</span>).<span class="fn">html</span>(<span class="str">"&lt;strong&gt;Hello&lt;/strong&gt;"</span>);
+<span class="com">// .text() afficherait les balises littéralement</span>
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Différence html / text</span>
+                                <div class="demo-output" id="demo6-out">--</div>
+                                <button class="try-btn" data-demo="6-html">▶ .html()</button>
+                                <button class="try-btn" data-demo="6-text" style="background:var(--accent-2)">▶ .text()</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 7: CHAINING ===== -->
+                <div class="lesson" id="lesson-7">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 07</span> Le chaining</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            Chaque méthode jQuery retourne l'objet jQuery, ce qui permet d'enchaîner les appels.
+                            Plus lisible, plus concis.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// Chaîne de 4 actions en un seul appel</span>
+<span class="kw">$</span>(<span class="str">"#box"</span>)
+  .<span class="fn">css</span>(<span class="str">"background"</span>, <span class="str">"#ffd23f"</span>)
+  .<span class="fn">animate</span>({ <span class="str">"margin-left"</span>: <span class="str">"100px"</span> }, <span class="str">500</span>)
+  .<span class="fn">animate</span>({ <span class="str">"margin-left"</span>: <span class="str">"0"</span> }, <span class="str">500</span>)
+  .<span class="fn">css</span>(<span class="str">"background"</span>, <span class="str">"#ff4d2e"</span>);
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">4 actions enchaînées</span>
+                                <div class="demo-box" id="demo7-chain"></div>
+                                <button class="try-btn" data-demo="7">▶ Lancer la chaîne</button>
+                            </div>
+                        </div>
+
+                        <div class="tip">
+                            <strong>Pourquoi ?</strong> Les méthodes "setters" (qui modifient) retournent <code>this</code>.
+                            Les méthodes "getters" (qui lisent, comme <code>.val()</code>, <code>.text()</code> sans argument)
+                            cassent la chaîne car elles retournent une valeur.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== LESSON 8: EACH & DATA ===== -->
+                <div class="lesson" id="lesson-8">
+                    <div class="lesson-head">
+                        <h3><span class="ch">CHAPITRE 08</span> .each() et data-attributes</h3>
+                        <span class="toggle">+</span>
+                    </div>
+                    <div class="lesson-body">
+                        <p class="intro">
+                            <code>.each()</code> itère sur chaque élément d'une sélection.
+                            <code>.data()</code> lit les attributs <code>data-*</code> en HTML.
+                            La combinaison est la base des composants dynamiques.
+                        </p>
+
+                        <div class="demo">
+                            <div class="demo-code">
+                                <span class="tag">// .each() — boucle sur la sélection</span>
+<span class="kw">$</span>(<span class="str">".item"</span>).<span class="fn">each</span>(<span class="kw">function</span>(<span class="kw">i</span>) {
+  <span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">text</span>(
+    (i + <span class="str">1</span>) + <span class="str">". "</span> + <span class="kw">$</span>(<span class="kw">this</span>).<span class="fn">data</span>(<span class="str">"label"</span>)
+  );
+});
+                            </div>
+                            <div class="demo-result">
+                                <span class="tag">Lit data-label et numérote</span>
+                                <ul class="demo-list" id="demo8-list">
+                                    <li class="item" data-label="Pain au chocolat">--</li>
+                                    <li class="item" data-label="Croissant">--</li>
+                                    <li class="item" data-label="Éclair café">--</li>
+                                </ul>
+                                <button class="try-btn" data-demo="8">▶ Numéroter</button>
+                            </div>
+                        </div>
+
+                        <div class="tip">
+                            <strong>Pattern fréquent :</strong> exactement ce que fait notre navbar !
+                            Chaque <code>&lt;li&gt;</code> porte un <code>data-page="..."</code>,
+                            et le clic lit cette donnée pour savoir quelle section afficher.
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+
+            <!-- ===================================
+                 PROFILE
+            =================================== -->
+            <section id="profilePage" class="page">
+
+                <div class="page-head">
+                    <div>
+                        <div class="num">03 / Compte</div>
+                        <h2>Profil<em>.</em></h2>
+                    </div>
+                    <div class="meta">
+                        Compte vérifié<br>
+                        Session sécurisée
+                    </div>
+                </div>
+
+                <div class="profile-grid">
+
+                    <div class="profile-card">
+                        <div class="big-avatar" id="profileAvatar">N</div>
+                        <h3 id="profileName">--</h3>
+                        <div class="email" id="profileEmail">--</div>
+                        <div class="badge">✓ Vérifié</div>
+                    </div>
+
+                    <div class="card info-card">
+                        <h4>Informations du compte</h4>
+                        <div class="sub">Données enregistrées à l'inscription</div>
+                        <div class="row">
+                            <span class="k">Username</span>
+                            <span class="v" id="infoUsername">--</span>
+                        </div>
+                        <div class="row">
+                            <span class="k">Email</span>
+                            <span class="v" id="infoEmail">--</span>
+                        </div>
+                        <div class="row">
+                            <span class="k">Mot de passe</span>
+                            <span class="v">••••••••</span>
+                        </div>
+                        <div class="row">
+                            <span class="k">Créé le</span>
+                            <span class="v" id="infoDate">--</span>
+                        </div>
+                        <div class="row">
+                            <span class="k">Statut</span>
+                            <span class="v" style="color:var(--green)">● Actif</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ===================================
+                 SETTINGS
+            =================================== -->
+            <section id="settingsPage" class="page">
+
+                <div class="page-head">
+                    <div>
+                        <div class="num">04 / Configuration</div>
+                        <h2>Paramètres<em>.</em></h2>
+                    </div>
+                    <div class="meta">
+                        Préférences locales<br>
+                        Démo jQuery
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h4>Notifications</h4>
+                    <div class="sub">Active ce que tu veux recevoir</div>
+
+                    <div class="setting-row">
+                        <div>
+                            <div class="name">Notifications par email</div>
+                            <div class="desc">Recevoir un résumé hebdomadaire</div>
+                        </div>
+                        <div class="toggle-switch on"></div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div>
+                            <div class="name">Alertes en direct</div>
+                            <div class="desc">Pop-up pour les événements importants</div>
+                        </div>
+                        <div class="toggle-switch"></div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div>
+                            <div class="name">Mode sombre auto</div>
+                            <div class="desc">Suit l'heure du système</div>
+                        </div>
+                        <div class="toggle-switch"></div>
+                    </div>
+
+                    <div class="setting-row">
+                        <div>
+                            <div class="name">Animations avancées</div>
+                            <div class="desc">Effets de transition entre les pages</div>
+                        </div>
+                        <div class="toggle-switch on"></div>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="card">
+                    <h4>Compte</h4>
+                    <div class="sub">Actions sensibles</div>
+
+                    <div class="setting-row">
+                        <div>
+                            <div class="name">Supprimer mon compte</div>
+                            <div class="desc">Te déconnecte et supprime tes infos locales</div>
+                        </div>
+                        <button class="try-btn" id="deleteAccount" style="background:var(--ink)">Supprimer</button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<script>
+/* =========================================================================
+   ÉTAT GLOBAL (en mémoire — pas de localStorage car non supporté en artifact)
+========================================================================= */
+let registeredUser = null;   // { username, email, password, createdAt }
+let isLoggedIn = false;
+
+/* =========================================================================
+   REGEX DE VALIDATION
+========================================================================= */
+/* =========================================================================
+   AUTH — VALIDATION TEMPS RÉEL
+========================================================================= */
+
+
+/* =========================================================================
+   INSCRIPTION
+========================================================================= */
+/* =========================================================================
+   CONNEXION
+========================================================================= */
+
+/* =========================================================================
+   DÉCONNEXION
+========================================================================= */
+
+/* =========================================================================
+   NAVIGATION (dans le shell)
+========================================================================= */
+
+/* =========================================================================
+   DASHBOARD — ANIMATIONS
+========================================================================= */
+
+/* =========================================================================
+   COURSE — TOC & accordéons
+========================================================================= */
+
+/* =========================================================================
+   COURSE — DEMOS INTERACTIVES
+========================================================================= */
+
+// Demo 1 — sélecteurs
+/* =========================================================================
+   SETTINGS — toggle switches
+========================================================================= */
+$(".toggle-switch").on("click", function() {
+    $(this).toggleClass("on");
+});
+
+/* =========================================================================
+   PETITS PLUS — barres de stats au hover
+========================================================================= */
+
+</script>
+
+</body>
+</html>
